@@ -3,9 +3,14 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "debug.h"
-
 #define MAGIC "\x7f\x45\x4c\x46"
+
+#define EI_CLASS 0x04
+#define EI_DATA 0x05
+#define EI_VERSION 0x06
+#define EI_OSABI 0x07
+
+#define ET_EXEC 0x02
 
 #define EM_RISCV 0xf3
 
@@ -26,16 +31,14 @@ static bool is_assigned_machine(u16 m)
     return true;
 }
 
-enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
+enum ElfError validate_ident(const u8 ident[static EI_NIDENT],
+                             enum Endianness endian[static 1])
 {
-    const u8* const e_ident = hdr->e_ident;
-
-    if (memcmp(e_ident, MAGIC, 4) != 0) {
+    if (memcmp(ident, MAGIC, 4) != 0) {
         return ELF_BAD_MAGIC;
     }
 
-    const u8 ei_class = e_ident[0x04];
-    switch (ei_class) {
+    switch (ident[EI_CLASS]) {
         case 1:
             // 32 bit
             break;
@@ -46,42 +49,38 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
             return ELF_BAD_CLASS;
     }
 
-    // already checked
-    const u8 ei_data = e_ident[0x05];
-    switch (ei_data) {
-        case 1:
-        case 2:
-            break;
-        default:
-            UNREACHABLE();
+    const enum ElfError err = parse_endianness(ident[EI_DATA], endian);
+    if (err != ELF_OK) {
+        return err;
     }
 
-    const u8 ei_version = e_ident[0x06];
-    if (ei_version != 1) {
+    if (ident[EI_VERSION] != 1) {
         return ELF_BAD_IDENT_VERSION;
     }
 
-    const u8 ei_osabi = e_ident[0x07];
-    if (ei_osabi == 0x05 || ei_osabi > 0x12) {
+    // 0x04 and 0x05 are unassigned, 0x40 and up are arch-specific and RISC-V
+    // defines none
+    const u8 ei_osabi = ident[EI_OSABI];
+    if (ei_osabi == 0x04 || ei_osabi == 0x05 || ei_osabi > 0x12) {
         return ELF_BAD_OSABI;
     }
 
     // 0x08      we skip EI_ABIVERSION, no checks
-    // 0x09-0x0A we skip 7 bytes of padding
+    // 0x09-0x0F we skip 7 bytes of padding
 
-    switch (hdr->e_type) {
-        case 0x0:
-        case 0x01:
-        case 0x02:
-        case 0x03:
-        case 0x04:
-        case 0xfe00:
-        case 0xfeff:
-        case 0xff00:
-        case 0xffff:
-            break;
-        default:
-            return ELF_BAD_TYPE;
+    return ELF_OK;
+}
+
+enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
+{
+    // 0x00-0x04 are defined, 0xfe00-0xfeff is OS-specific and 0xff00-0xffff
+    // is processor-specific
+    const u16 e_type = hdr->e_type;
+    if (e_type > 0x04 && e_type < 0xfe00) {
+        return ELF_BAD_TYPE;
+    }
+    if (e_type != ET_EXEC) {
+        return ELF_UNSUPPORTED_TYPE;
     }
 
     if (!is_assigned_machine(hdr->e_machine)) {
