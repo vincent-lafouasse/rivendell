@@ -75,6 +75,7 @@ target_sources(rivendell_core PRIVATE src/read.c src/validate.c src/error_str.c)
 target_include_directories(rivendell_core PUBLIC include src)
 target_link_libraries(rivendell_core PRIVATE rivendell_flags)
 target_link_libraries(rivendell_core PRIVATE bitcast::bitcast)
+set_target_properties(rivendell_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 add_library(rivendell)
 target_sources(rivendell PRIVATE src/load.c)
