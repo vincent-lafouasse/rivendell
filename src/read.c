@@ -55,3 +55,32 @@ struct Elf32_Ehdr read_ehdr(const u8 data[static 52], enum Endianness endian)
     out.e_shstrndx = read_u16(data + EI_NIDENT + 34);
     return out;
 }
+
+struct Elf32_Phdr read_phdr(const u8 data[static 32], enum Endianness endian)
+{
+    u32 (*read_u32)(const u8 bytes[4]);
+
+    switch (endian) {
+        case ENDIAN_LITTLE:
+            read_u32 = bitcastU32_LE;
+            break;
+        case ENDIAN_BIG:
+            read_u32 = bitcastU32_BE;
+            break;
+        default:
+            __builtin_trap();
+            __builtin_unreachable();
+    }
+
+    struct Elf32_Phdr out = {0};
+
+    out.p_type = read_u32(data);
+    out.p_offset = read_u32(data + 4);
+    out.p_vaddr = read_u32(data + 8);
+    out.p_paddr = read_u32(data + 12);
+    out.p_filesz = read_u32(data + 16);
+    out.p_memsz = read_u32(data + 20);
+    out.p_flags = read_u32(data + 24);
+    out.p_align = read_u32(data + 28);
+    return out;
+}
