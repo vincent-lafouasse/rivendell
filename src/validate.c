@@ -100,5 +100,7 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
         return ELF_BAD_VERSION;
     }
 
+    // e_entry, e_phoff, e_shoff are unchecked u32
+
     return ELF_OK;
 }
