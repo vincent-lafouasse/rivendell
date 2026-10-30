@@ -61,8 +61,7 @@ add_library(rivendell::rivendell ALIAS rivendell)
 
 target_include_directories(rivendell PUBLIC include)
 
-target_compile_options(rivendell PRIVATE -Wall -Wextra -pedantic
-                                         -fdiagnostics-color=always)
+target_link_libraries(rivendell PUBLIC rivendell_flags)
 
 include(FetchContent)
 FetchContent_Declare(
