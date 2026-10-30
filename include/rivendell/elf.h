@@ -6,13 +6,30 @@
 enum ElfError {
     ELF_OK,
     ELF_TRUNCATED,
+
+    // e_ident
     ELF_BAD_MAGIC,
     ELF_BAD_CLASS,
     ELF_BAD_ENDIAN,
-    ELF_BAD_MACHINE,
+    ELF_BAD_IDENT_VERSION,
+    ELF_BAD_OSABI,
+
+    // file header
     ELF_BAD_TYPE,
+    ELF_BAD_MACHINE,
+    ELF_BAD_VERSION,
+    ELF_BAD_FLAGS,
+    ELF_BAD_EHSIZE,
+    ELF_BAD_PHENTSIZE,
+    ELF_NO_SEGMENTS,
+    ELF_PHDRS_OUT_OF_FILE,
+    ELF_BAD_ENTRY,
+
+    // program headers
     ELF_SEGMENT_OUT_OF_FILE,
     ELF_SEGMENT_OUT_OF_RAM,
+    ELF_SEGMENT_FILESZ_GT_MEMSZ,
+    ELF_SEGMENT_BAD_ALIGN,
 };
 const char* elf_error_str(enum ElfError e);
 
