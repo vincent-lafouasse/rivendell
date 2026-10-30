@@ -1,5 +1,7 @@
 #pragma once
 
+#include <rivendell/elf.h>
+
 #include "types.h"
 
 #define EI_NIDENT 16
@@ -23,6 +25,7 @@ struct Elf32_Ehdr {
     u16 e_shstrndx;
 };
 
+enum ElfError check_e_ident(const u8 data[EI_NIDENT]);
 struct Elf32_Ehdr read_elf_header(const u8 data[static 52]);
 
 struct Elf32_Phdr {
