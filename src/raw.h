@@ -39,4 +39,4 @@ struct Elf32_Phdr {
     u32 p_align;
 };
 
-struct Elf32_Phdr read_phdr(const u8 data[static 32]);
+struct Elf32_Phdr read_phdr(const u8 data[static 32], enum Endianness endian);
