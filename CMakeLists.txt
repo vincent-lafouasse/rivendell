@@ -10,7 +10,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
 if(NOT UNIX)
-    message(FATAL_ERROR "raven requires a POSIX system")
+  message(FATAL_ERROR "rivendell requires a POSIX system")
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
@@ -65,16 +65,11 @@ target_include_directories(${PROJECT_NAME}
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic
                                                -fdiagnostics-color=always)
 
-# if(RIVENDELL_BUILD_TESTS)
-#   enable_language(CXX)
-#   set(CMAKE_CXX_STANDARD 20)
-#   set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# 
-#   include(FetchContent)
-#   include(cmake/fetch_gtest.cmake)
-# 
-#   include(CTest)
-#   enable_testing()
-# 
-#   add_subdirectory(test)
-# endif()
+# if(RIVENDELL_BUILD_TESTS) enable_language(CXX) set(CMAKE_CXX_STANDARD 20)
+# set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#
+# include(FetchContent) include(cmake/fetch_gtest.cmake)
+#
+# include(CTest) enable_testing()
+#
+# add_subdirectory(test) endif()
