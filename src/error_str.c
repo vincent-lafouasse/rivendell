@@ -20,6 +20,8 @@ const char* elf_error_str(enum ElfError e)
         case ELF_BAD_OSABI:
             return "unsupported OS/ABI";
         case ELF_BAD_TYPE:
+            return "invalid ELF type";
+        case ELF_UNSUPPORTED_TYPE:
             return "unsupported ELF type (expected executable)";
         case ELF_BAD_MACHINE:
             return "invalid machine";

@@ -17,6 +17,7 @@ enum ElfError {
 
     // file header
     ELF_BAD_TYPE,
+    ELF_UNSUPPORTED_TYPE,
     ELF_BAD_MACHINE,
     ELF_UNSUPPORTED_MACHINE,
     ELF_BAD_VERSION,
