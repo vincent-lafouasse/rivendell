@@ -9,7 +9,10 @@
 #define EI_CLASS_32BIT 1
 #define EI_CLASS_64BIT 2
 #define EI_DATA 0x05
+#define EI_DATA_LE 1
+#define EI_DATA_BE 1
 #define EI_VERSION 0x06
+#define EI_VERSION_ONLY_VALUE 1
 #define EI_OSABI 0x07
 
 #define ET_EXEC 0x02
@@ -49,14 +52,14 @@ static enum ElfError validate_ident(const u8 ident[static EI_NIDENT])
     }
 
     switch (ident[EI_DATA]) {
-        case 1:
-        case 2:
+        case EI_DATA_LE:
+        case EI_DATA_LE:
             break;
         default:
             return ELF_BAD_ENDIAN;
     }
 
-    if (ident[EI_VERSION] != 1) {
+    if (ident[EI_VERSION] != EI_VERSION_ONLY_VALUE) {
         return ELF_BAD_IDENT_VERSION;
     }
 
