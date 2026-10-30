@@ -41,7 +41,7 @@ enum Endianness parse_endianness(uint8_t ei_data)
             return ENDIAN_BIG;
         default:
             // placeholder so the header can be read, validate_ehdr checks
-            // e_ident first and rejects this file with ELF_BAD_ENDIAN
+            // e_ident first and rejects this file with RVD_BAD_ENDIAN
             return ENDIAN_LITTLE;
     }
 }

@@ -51,32 +51,32 @@ static bool is_assigned_machine(u16 m)
     return true;
 }
 
-static enum ElfError validate_riscv_flags(u32 e_flags)
+static enum RvdError validate_riscv_flags(u32 e_flags)
 {
     if (e_flags & EF_RISCV_RESERVED) {
-        return ELF_BAD_FLAGS;
+        return RVD_BAD_FLAGS;
     }
     // everything else is a valid flag the emulator may not implement:
     // hard-float ABIs, RVE, TSO, RV64ILP32, RVY and non-standard bits
     if (e_flags & ~(u32)RISCV_SUPPORTED_FLAGS) {
-        return ELF_UNSUPPORTED_FLAGS;
+        return RVD_UNSUPPORTED_FLAGS;
     }
-    return ELF_OK;
+    return RVD_OK;
 }
 
-static enum ElfError validate_ident(const u8 ident[static EI_NIDENT])
+static enum RvdError validate_ident(const u8 ident[static EI_NIDENT])
 {
     if (memcmp(ident, MAGIC, 4) != 0) {
-        return ELF_BAD_MAGIC;
+        return RVD_BAD_MAGIC;
     }
 
     switch (ident[EI_CLASS]) {
         case EI_CLASS_32BIT:
             break;
         case EI_CLASS_64BIT:
-            return ELF_UNSUPPORTED_CLASS;
+            return RVD_UNSUPPORTED_CLASS;
         default:
-            return ELF_BAD_CLASS;
+            return RVD_BAD_CLASS;
     }
 
     switch (ident[EI_DATA]) {
@@ -84,30 +84,30 @@ static enum ElfError validate_ident(const u8 ident[static EI_NIDENT])
         case EI_DATA_BE:
             break;
         default:
-            return ELF_BAD_ENDIAN;
+            return RVD_BAD_ENDIAN;
     }
 
     if (ident[EI_VERSION] != EI_VERSION_ONLY_VALUE) {
-        return ELF_BAD_IDENT_VERSION;
+        return RVD_BAD_IDENT_VERSION;
     }
 
     // 0x04 and 0x05 are unassigned, 0x40 and up are arch-specific and RISC-V
     // defines none
     const u8 ei_osabi = ident[EI_OSABI];
     if (ei_osabi == 0x04 || ei_osabi == 0x05 || ei_osabi > 0x12) {
-        return ELF_BAD_OSABI;
+        return RVD_BAD_OSABI;
     }
 
     // 0x08      we skip EI_ABIVERSION, no checks
     // 0x09-0x0F we skip 7 bytes of padding
 
-    return ELF_OK;
+    return RVD_OK;
 }
 
-enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
+enum RvdError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
 {
-    const enum ElfError err = validate_ident(hdr->e_ident);
-    if (err != ELF_OK) {
+    const enum RvdError err = validate_ident(hdr->e_ident);
+    if (err != RVD_OK) {
         return err;
     }
 
@@ -115,34 +115,34 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
     // is processor-specific
     const u16 e_type = hdr->e_type;
     if (e_type > 0x04 && e_type < 0xfe00) {
-        return ELF_BAD_TYPE;
+        return RVD_BAD_TYPE;
     }
     if (e_type != ET_EXEC) {
-        return ELF_UNSUPPORTED_TYPE;
+        return RVD_UNSUPPORTED_TYPE;
     }
 
     if (hdr->e_version != 1) {
-        return ELF_BAD_VERSION;
+        return RVD_BAD_VERSION;
     }
 
     if (!is_assigned_machine(hdr->e_machine)) {
-        return ELF_BAD_MACHINE;
+        return RVD_BAD_MACHINE;
     }
 
     // supported targets only, add a case and a flags validator to support more
-    enum ElfError flags_err;
+    enum RvdError flags_err;
     switch (hdr->e_machine) {
         case EM_RISCV:
             flags_err = validate_riscv_flags(hdr->e_flags);
             break;
         default:
-            return ELF_UNSUPPORTED_MACHINE;
+            return RVD_UNSUPPORTED_MACHINE;
     }
-    if (flags_err != ELF_OK) {
+    if (flags_err != RVD_OK) {
         return flags_err;
     }
 
     // e_entry, e_phoff, e_shoff are unchecked u32
 
-    return ELF_OK;
+    return RVD_OK;
 }

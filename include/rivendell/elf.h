@@ -3,43 +3,43 @@
 #include <stddef.h>
 #include <stdint.h>
 
-enum ElfError {
-    ELF_OK,
-    ELF_TRUNCATED,
+enum RvdError {
+    RVD_OK,
+    RVD_TRUNCATED,
 
     // e_ident
-    ELF_BAD_MAGIC,
-    ELF_BAD_CLASS,
-    ELF_UNSUPPORTED_CLASS,
-    ELF_BAD_ENDIAN,
-    ELF_BAD_IDENT_VERSION,
-    ELF_BAD_OSABI,
+    RVD_BAD_MAGIC,
+    RVD_BAD_CLASS,
+    RVD_UNSUPPORTED_CLASS,
+    RVD_BAD_ENDIAN,
+    RVD_BAD_IDENT_VERSION,
+    RVD_BAD_OSABI,
 
     // file header
-    ELF_BAD_TYPE,
-    ELF_UNSUPPORTED_TYPE,
-    ELF_BAD_MACHINE,
-    ELF_UNSUPPORTED_MACHINE,
-    ELF_BAD_VERSION,
-    ELF_BAD_FLAGS,
-    ELF_UNSUPPORTED_FLAGS,
-    ELF_BAD_EHSIZE,
-    ELF_BAD_PHENTSIZE,
-    ELF_NO_SEGMENTS,
-    ELF_PHDRS_OUT_OF_FILE,
-    ELF_BAD_ENTRY,
+    RVD_BAD_TYPE,
+    RVD_UNSUPPORTED_TYPE,
+    RVD_BAD_MACHINE,
+    RVD_UNSUPPORTED_MACHINE,
+    RVD_BAD_VERSION,
+    RVD_BAD_FLAGS,
+    RVD_UNSUPPORTED_FLAGS,
+    RVD_BAD_EHSIZE,
+    RVD_BAD_PHENTSIZE,
+    RVD_NO_SEGMENTS,
+    RVD_PHDRS_OUT_OF_FILE,
+    RVD_BAD_ENTRY,
 
     // program headers
-    ELF_SEGMENT_OUT_OF_FILE,
-    ELF_SEGMENT_OUT_OF_RAM,
-    ELF_SEGMENT_FILESZ_GT_MEMSZ,
-    ELF_SEGMENT_BAD_ALIGN,
+    RVD_SEGMENT_OUT_OF_FILE,
+    RVD_SEGMENT_OUT_OF_RAM,
+    RVD_SEGMENT_FILESZ_GT_MEMSZ,
+    RVD_SEGMENT_BAD_ALIGN,
 };
-const char* elf_error_str(enum ElfError e);
+const char* rvd_error_str(enum RvdError e);
 
-enum ElfError elf32_load(const uint8_t* file,
-                         size_t file_size,
-                         uint8_t* ram,
-                         size_t ram_size,
-                         uint32_t ram_base,
-                         uint32_t* entry);
+enum RvdError rvd_elf32_load(const uint8_t* file,
+                             size_t file_size,
+                             uint8_t* ram,
+                             size_t ram_size,
+                             uint32_t ram_base,
+                             uint32_t* entry);
