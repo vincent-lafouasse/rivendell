@@ -19,6 +19,8 @@
 
 #define EM_RISCV 0xf3
 
+#define EV_ONLY_VALUE 1
+
 // RISC-V e_flags, from the RISC-V ELF psABI, section "File Header":
 // https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc
 #define EF_RISCV_RVC 0x00000001
@@ -121,7 +123,7 @@ enum RvdError rvd_validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
         return RVD_UNSUPPORTED_TYPE;
     }
 
-    if (hdr->e_version != 1) {
+    if (hdr->e_version != EV_ONLY_VALUE) {
         return RVD_BAD_VERSION;
     }
 
