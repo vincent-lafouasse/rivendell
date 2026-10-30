@@ -55,15 +55,14 @@ target_compile_options(
 target_link_options(rivendell_flags INTERFACE
                     "$<$<CONFIG:Debug>:-fsanitize=address,undefined>")
 
-add_library(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PRIVATE src/elf.c)
-add_library(rivendell::rivendell ALIAS ${PROJECT_NAME})
+add_library(rivendell)
+target_sources(rivendell PRIVATE src/elf.c)
+add_library(rivendell::rivendell ALIAS rivendell)
 
-target_include_directories(${PROJECT_NAME}
-                           PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(rivendell PUBLIC include)
 
-target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic
-                                               -fdiagnostics-color=always)
+target_compile_options(rivendell PRIVATE -Wall -Wextra -pedantic
+                                         -fdiagnostics-color=always)
 
 # if(RIVENDELL_BUILD_TESTS) enable_language(CXX) set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
