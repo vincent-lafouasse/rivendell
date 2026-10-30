@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 
+#include "requirements.h"
+
 #define EI_NIDENT 16
 
 struct Elf32_Ehdr {
