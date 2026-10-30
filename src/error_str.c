@@ -37,6 +37,8 @@ const char* rvd_error_str(enum RvdError e)
             return "bad ELF header size";
         case RVD_BAD_PHENTSIZE:
             return "bad program header entry size";
+        case RVD_BAD_SHENTSIZE:
+            return "bad section header entry size";
         case RVD_NO_SEGMENTS:
             return "no program headers";
         case RVD_PHDRS_OUT_OF_FILE:
