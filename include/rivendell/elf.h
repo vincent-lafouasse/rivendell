@@ -1,1 +1,13 @@
 #pragma once
+
+enum ElfError {
+    ELF_OK,
+    ELF_TRUNCATED,
+    ELF_BAD_MAGIC,
+    ELF_BAD_CLASS,
+    ELF_BAD_ENDIAN,
+    ELF_BAD_MACHINE,
+    ELF_BAD_TYPE,
+    ELF_SEGMENT_OUT_OF_FILE,
+    ELF_SEGMENT_OUT_OF_RAM,
+};
