@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(
   rivendell
-  VERSION 1.0.1
+  VERSION 0.0.1
   LANGUAGES C)
 
 set(CMAKE_C_STANDARD 11)
