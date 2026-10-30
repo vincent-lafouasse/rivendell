@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
+
 enum ElfError {
     ELF_OK,
     ELF_TRUNCATED,
