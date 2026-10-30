@@ -26,6 +26,8 @@ option(RIVENDELL_BUILD_TESTS "Build and run tests using CTest"
        ${RIVENDELL_IS_TOP_LEVEL})
 option(RIVENDELL_SANITIZE "Build with ASan and UBSan in Debug"
        ${RIVENDELL_IS_TOP_LEVEL})
+option(RIVENDELL_BUILD_TOOLS "Build developer tools such as readelf"
+       ${RIVENDELL_IS_TOP_LEVEL})
 
 add_library(rivendell_flags INTERFACE)
 target_compile_options(
@@ -83,8 +85,15 @@ add_library(rivendell::rivendell ALIAS rivendell)
 
 target_include_directories(rivendell PUBLIC include)
 
-target_link_libraries(rivendell PUBLIC rivendell_flags)
+target_link_libraries(rivendell PRIVATE rivendell_flags)
 target_link_libraries(rivendell PRIVATE rivendell_core)
+
+if(RIVENDELL_BUILD_TOOLS)
+  add_executable(rivendell_readelf)
+  target_sources(rivendell_readelf PRIVATE tools/readelf.c)
+  target_link_libraries(rivendell_readelf PRIVATE rivendell_flags)
+  target_link_libraries(rivendell_readelf PRIVATE rivendell_core)
+endif()
 
 if(RIVENDELL_BUILD_TESTS)
   add_executable(dummy)
