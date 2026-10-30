@@ -55,23 +55,27 @@ target_compile_options(
 target_link_options(rivendell_flags INTERFACE
                     "$<$<CONFIG:Debug>:-fsanitize=address,undefined>")
 
-add_library(rivendell)
-target_sources(rivendell PRIVATE src/load.c src/read.c src/validate.c
-                                 src/error_str.c)
-add_library(rivendell::rivendell ALIAS rivendell)
-
-target_include_directories(rivendell PUBLIC include)
-target_include_directories(rivendell PRIVATE src)
-
-target_link_libraries(rivendell PUBLIC rivendell_flags)
-
 include(FetchContent)
 FetchContent_Declare(
   bitcast
   GIT_REPOSITORY https://github.com/vincent-lafouasse/libbitcast.git
   GIT_TAG 1.0.1)
 FetchContent_MakeAvailable(bitcast)
-target_link_libraries(rivendell PRIVATE bitcast::bitcast)
+
+add_library(rivendell_core OBJECT)
+target_sources(rivendell_core PRIVATE src/read.c src/validate.c src/error_str.c)
+target_include_directories(rivendell_core PUBLIC include src)
+target_link_libraries(rivendell_core PUBLIC rivendell_flags)
+target_link_libraries(rivendell_core PRIVATE bitcast::bitcast)
+
+add_library(rivendell)
+target_sources(rivendell PRIVATE src/load.c)
+add_library(rivendell::rivendell ALIAS rivendell)
+
+target_include_directories(rivendell PUBLIC include)
+
+target_link_libraries(rivendell PUBLIC rivendell_flags)
+target_link_libraries(rivendell PRIVATE rivendell_core)
 
 add_executable(test)
 target_sources(test PRIVATE test/main.c)
