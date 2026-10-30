@@ -6,6 +6,8 @@
 #define MAGIC "\x7f\x45\x4c\x46"
 
 #define EI_CLASS 0x04
+#define EI_CLASS_32BIT 1
+#define EI_CLASS_64BIT 2
 #define EI_DATA 0x05
 #define EI_VERSION 0x06
 #define EI_OSABI 0x07
@@ -38,11 +40,9 @@ static enum ElfError validate_ident(const u8 ident[static EI_NIDENT])
     }
 
     switch (ident[EI_CLASS]) {
-        case 1:
-            // 32 bit
+        case EI_CLASS_32BIT:
             break;
-        case 2:
-            // 64 bit
+        case EI_CLASS_64BIT:
             return ELF_UNSUPPORTED_CLASS;
         default:
             return ELF_BAD_CLASS;
