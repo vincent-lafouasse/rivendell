@@ -19,6 +19,21 @@
 
 #define EM_RISCV 0xf3
 
+// RISC-V e_flags, from the RISC-V ELF psABI, section "File Header":
+// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc
+#define EF_RISCV_RVC 0x00000001
+#define EF_RISCV_FLOAT_ABI 0x00000006  // 0 soft, 2 single, 4 double, 6 quad
+#define EF_RISCV_RVE 0x00000008
+#define EF_RISCV_TSO 0x00000010
+#define EF_RISCV_RV64ILP32 0x00000020  // experimental, RV64 hardware only
+#define EF_RISCV_RVY 0x00000040
+#define EF_RISCV_RESERVED 0x00ffff80     // bits 7-23, must not be set
+#define EF_RISCV_NONSTANDARD 0xff000000  // bits 24-31, toolchain-defined
+
+// what the emulator can run: soft-float RV32I, no compressed instructions.
+// add EF_RISCV_RVC here once C is implemented
+#define RISCV_SUPPORTED_FLAGS 0x00000000
+
 // e_machine values named by GNU readelf 2.47, the rest are unassigned.
 // numbers get assigned over time, extend this when readelf learns new ones
 static bool is_assigned_machine(u16 m)
