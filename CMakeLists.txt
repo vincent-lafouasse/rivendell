@@ -72,6 +72,11 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(bitcast)
 target_link_libraries(rivendell PRIVATE bitcast::bitcast)
 
+add_executable(test)
+target_sources(test PRIVATE test/main.c)
+target_link_libraries(test PUBLIC rivendell_flags)
+target_link_libraries(test PUBLIC rivendell::rivendell)
+
 # if(RIVENDELL_BUILD_TESTS) enable_language(CXX) set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #
