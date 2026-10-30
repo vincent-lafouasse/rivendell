@@ -20,3 +20,13 @@ struct Elf32_Ehdr {
     uint16_t e_shnum;
     uint16_t e_shstrndx;
 };
+struct Elf32_Phdr {
+    uint32_t p_type;
+    uint32_t p_offset;
+    uint32_t p_vaddr;
+    uint32_t p_paddr;
+    uint32_t p_filesz;
+    uint32_t p_memsz;
+    uint32_t p_flags;
+    uint32_t p_align;
+};
