@@ -33,5 +33,15 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
             UNREACHABLE();
     }
 
+    const u8 ei_version = e_ident[0x06];
+    if (ei_version != 1) {
+        return ELF_BAD_IDENT_VERSION;
+    }
+
+    const u8 ei_osabi = e_ident[0x07];
+    if (ei_osabi == 0x05 || ei_osabi > 0x12) {
+        return ELF_BAD_OSABI;
+    }
+
     return ELF_OK;
 }
