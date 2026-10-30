@@ -37,8 +37,10 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
     const u8 ei_class = e_ident[0x04];
     switch (ei_class) {
         case 1:
+            // 32 bit
             break;
         case 2:
+            // 64 bit
             return ELF_UNSUPPORTED_CLASS;
         default:
             return ELF_BAD_CLASS;
