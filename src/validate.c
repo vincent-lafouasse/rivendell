@@ -96,5 +96,9 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
             return ELF_UNSUPPORTED_MACHINE;
     }
 
+    if (hdr->e_version != 1) {
+        return ELF_BAD_VERSION;
+    }
+
     return ELF_OK;
 }
