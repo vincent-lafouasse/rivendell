@@ -4,6 +4,8 @@
 
 #define EI_NIDENT 16
 
+enum Endianness { ENDIAN_LITTLE, ENDIAN_BIG };
+
 struct Elf32_Ehdr {
     u8 e_ident[EI_NIDENT];
     u16 e_type;
