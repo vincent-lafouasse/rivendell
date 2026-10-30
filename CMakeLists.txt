@@ -77,16 +77,11 @@ target_include_directories(rivendell PUBLIC include)
 target_link_libraries(rivendell PUBLIC rivendell_flags)
 target_link_libraries(rivendell PRIVATE rivendell_core)
 
-add_executable(test)
-target_sources(test PRIVATE test/main.c)
-target_link_libraries(test PRIVATE rivendell_flags)
-target_link_libraries(test PRIVATE rivendell_core)
-
-# if(RIVENDELL_BUILD_TESTS) enable_language(CXX) set(CMAKE_CXX_STANDARD 20)
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#
-# include(FetchContent) include(cmake/fetch_gtest.cmake)
-#
-# include(CTest) enable_testing()
-#
-# add_subdirectory(test) endif()
+if(RIVENDELL_BUILD_TESTS)
+  add_executable(test)
+  target_sources(test PRIVATE test/main.c)
+  target_link_libraries(test PRIVATE rivendell_flags)
+  target_link_libraries(test PRIVATE rivendell_core)
+  include(CTest)
+  enable_testing()
+endif()
