@@ -4,6 +4,8 @@
 
 #include <bitcast.h>
 
+#include "debug.h"
+
 typedef u16 (*ReadU16)(const u8 bytes[2]);
 typedef u32 (*ReadU32)(const u8 bytes[4]);
 
@@ -26,8 +28,7 @@ static struct IntReader int_reader(enum Endianness endian)
                 .read_u32 = bitcastU32_BE,
             };
         default:
-            __builtin_trap();
-            __builtin_unreachable();
+            UNREACHABLE();
     }
 }
 
