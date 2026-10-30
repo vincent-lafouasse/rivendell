@@ -10,7 +10,7 @@
 #define EI_CLASS_64BIT 2
 #define EI_DATA 0x05
 #define EI_DATA_LE 1
-#define EI_DATA_BE 1
+#define EI_DATA_BE 2
 #define EI_VERSION 0x06
 #define EI_VERSION_ONLY_VALUE 1
 #define EI_OSABI 0x07
