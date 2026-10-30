@@ -32,17 +32,17 @@ static struct IntReader int_reader(enum Endianness endian)
     }
 }
 
-enum ElfError parse_endianness(uint8_t ei_data, enum Endianness out[static 1])
+enum Endianness parse_endianness(uint8_t ei_data)
 {
     switch (ei_data) {
         case 1:
-            *out = ENDIAN_LITTLE;
-            return ELF_OK;
+            return ENDIAN_LITTLE;
         case 2:
-            *out = ENDIAN_BIG;
-            return ELF_OK;
+            return ENDIAN_BIG;
         default:
-            return ELF_BAD_ENDIAN;
+            // placeholder so the header can be read, validate_ehdr checks
+            // e_ident first and rejects this file with ELF_BAD_ENDIAN
+            return ENDIAN_LITTLE;
     }
 }
 
