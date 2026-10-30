@@ -10,6 +10,7 @@ enum ElfError {
     // e_ident
     ELF_BAD_MAGIC,
     ELF_BAD_CLASS,
+    ELF_UNSUPPORTED_CLASS,
     ELF_BAD_ENDIAN,
     ELF_BAD_IDENT_VERSION,
     ELF_BAD_OSABI,

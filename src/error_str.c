@@ -10,6 +10,8 @@ const char* elf_error_str(enum ElfError e)
         case ELF_BAD_MAGIC:
             return "bad ELF magic";
         case ELF_BAD_CLASS:
+            return "invalid ELF class";
+        case ELF_UNSUPPORTED_CLASS:
             return "unsupported ELF class (expected 32-bit)";
         case ELF_BAD_ENDIAN:
             return "invalid ELF data encoding";
