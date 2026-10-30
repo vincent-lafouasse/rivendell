@@ -56,7 +56,7 @@ target_link_options(rivendell_flags INTERFACE
                     "$<$<CONFIG:Debug>:-fsanitize=address,undefined>")
 
 add_library(rivendell)
-target_sources(rivendell PRIVATE src/elf.c src/read.c)
+target_sources(rivendell PRIVATE src/load.c src/read.c)
 add_library(rivendell::rivendell ALIAS rivendell)
 
 target_include_directories(rivendell PUBLIC include)
