@@ -43,5 +43,8 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
         return ELF_BAD_OSABI;
     }
 
+    // 0x08      we skip EI_ABIVERSION, no checks
+    // 0x09-0x0A we skip 7 bytes of padding
+
     return ELF_OK;
 }
