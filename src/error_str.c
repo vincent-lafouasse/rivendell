@@ -30,6 +30,8 @@ const char* elf_error_str(enum ElfError e)
         case ELF_BAD_VERSION:
             return "unsupported ELF version";
         case ELF_BAD_FLAGS:
+            return "invalid processor flags";
+        case ELF_UNSUPPORTED_FLAGS:
             return "unsupported processor flags";
         case ELF_BAD_EHSIZE:
             return "bad ELF header size";
