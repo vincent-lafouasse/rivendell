@@ -3,6 +3,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+// pretty much only during validation are errors raised
+// so these error variants are mostly validation errors
 enum RvdError {
     RVD_OK,
     RVD_TRUNCATED,
