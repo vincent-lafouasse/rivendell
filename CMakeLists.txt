@@ -59,7 +59,7 @@ add_library(rivendell)
 target_sources(rivendell PRIVATE src/elf.c)
 add_library(rivendell::rivendell ALIAS rivendell)
 
-target_include_directories(rivendell PUBLIC include)
+target_include_directories(rivendell PUBLIC include src)
 
 target_link_libraries(rivendell PUBLIC rivendell_flags)
 
