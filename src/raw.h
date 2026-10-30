@@ -25,7 +25,7 @@ struct Elf32_Ehdr {
     u16 e_shstrndx;
 };
 
-enum ElfError check_e_ident(const u8 data[EI_NIDENT]);
+enum ElfError parse_endianness(uint8_t ei_data, enum Endianness out[static 1]);
 struct Elf32_Ehdr read_elf_header(const u8 data[static 52]);
 
 struct Elf32_Phdr {
