@@ -31,8 +31,7 @@ static bool is_assigned_machine(u16 m)
     return true;
 }
 
-enum ElfError validate_ident(const u8 ident[static EI_NIDENT],
-                             enum Endianness endian[static 1])
+static enum ElfError validate_ident(const u8 ident[static EI_NIDENT])
 {
     if (memcmp(ident, MAGIC, 4) != 0) {
         return ELF_BAD_MAGIC;
@@ -49,9 +48,12 @@ enum ElfError validate_ident(const u8 ident[static EI_NIDENT],
             return ELF_BAD_CLASS;
     }
 
-    const enum ElfError err = parse_endianness(ident[EI_DATA], endian);
-    if (err != ELF_OK) {
-        return err;
+    switch (ident[EI_DATA]) {
+        case 1:
+        case 2:
+            break;
+        default:
+            return ELF_BAD_ENDIAN;
     }
 
     if (ident[EI_VERSION] != 1) {
@@ -73,6 +75,11 @@ enum ElfError validate_ident(const u8 ident[static EI_NIDENT],
 
 enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
 {
+    const enum ElfError err = validate_ident(hdr->e_ident);
+    if (err != ELF_OK) {
+        return err;
+    }
+
     // 0x00-0x04 are defined, 0xfe00-0xfeff is OS-specific and 0xff00-0xffff
     // is processor-specific
     const u16 e_type = hdr->e_type;
