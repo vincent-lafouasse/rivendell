@@ -1,10 +1,30 @@
 #include "validate.h"
 
+#include <stdbool.h>
 #include <string.h>
 
 #include "debug.h"
 
 #define MAGIC "\x7f\x45\x4c\x46"
+
+#define EM_RISCV 0xf3
+
+// e_machine values named by GNU readelf 2.47, the rest are unassigned.
+// numbers get assigned over time, extend this when readelf learns new ones
+static bool is_assigned_machine(u16 m)
+{
+    if (m > 0x103) {
+        return false;
+    }
+    // unassigned gaps
+    if ((m >= 0x0c && m <= 0x0e) || m == 0x10 || (m >= 0x18 && m <= 0x23) ||
+        (m >= 0x79 && m <= 0x82) || m == 0x85 || m == 0x8f ||
+        (m >= 0x91 && m <= 0x9f) || (m >= 0xce && m <= 0xd1) ||
+        (m >= 0xe1 && m <= 0xf2)) {
+        return false;
+    }
+    return true;
+}
 
 enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
 {
@@ -59,6 +79,18 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
             break;
         default:
             return ELF_BAD_TYPE;
+    }
+
+    if (!is_assigned_machine(hdr->e_machine)) {
+        return ELF_BAD_MACHINE;
+    }
+
+    // supported targets only, add a case to support more
+    switch (hdr->e_machine) {
+        case EM_RISCV:
+            break;
+        default:
+            return ELF_UNSUPPORTED_MACHINE;
     }
 
     return ELF_OK;
