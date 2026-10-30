@@ -14,6 +14,7 @@ enum ElfError {
     ELF_SEGMENT_OUT_OF_FILE,
     ELF_SEGMENT_OUT_OF_RAM,
 };
+const char* elf_error_str(enum ElfError e);
 
 enum ElfError elf32_load(const uint8_t* file,
                          size_t file_size,
