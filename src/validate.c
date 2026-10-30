@@ -12,7 +12,7 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
         return ELF_BAD_MAGIC;
     }
 
-    const uint8_t ei_class = hdr->e_ident[0x04];
+    const u8 ei_class = hdr->e_ident[0x04];
     switch (ei_class) {
         case 1:
         case 2:
@@ -22,7 +22,7 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
     }
 
     // already checked
-    const uint8_t ei_data = hdr->e_ident[0x05];
+    const u8 ei_data = hdr->e_ident[0x05];
     switch (ei_data) {
         case 1:
         case 2:
