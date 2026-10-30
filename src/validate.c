@@ -121,20 +121,25 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
         return ELF_UNSUPPORTED_TYPE;
     }
 
+    if (hdr->e_version != 1) {
+        return ELF_BAD_VERSION;
+    }
+
     if (!is_assigned_machine(hdr->e_machine)) {
         return ELF_BAD_MACHINE;
     }
 
-    // supported targets only, add a case to support more
+    // supported targets only, add a case and a flags validator to support more
+    enum ElfError flags_err;
     switch (hdr->e_machine) {
         case EM_RISCV:
+            flags_err = validate_riscv_flags(hdr->e_flags);
             break;
         default:
             return ELF_UNSUPPORTED_MACHINE;
     }
-
-    if (hdr->e_version != 1) {
-        return ELF_BAD_VERSION;
+    if (flags_err != ELF_OK) {
+        return flags_err;
     }
 
     // e_entry, e_phoff, e_shoff are unchecked u32
