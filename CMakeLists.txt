@@ -64,6 +64,14 @@ target_include_directories(rivendell PUBLIC include)
 target_compile_options(rivendell PRIVATE -Wall -Wextra -pedantic
                                          -fdiagnostics-color=always)
 
+include(FetchContent)
+FetchContent_Declare(
+  bitcast
+  GIT_REPOSITORY https://github.com/vincent-lafouasse/libbitcast.git
+  GIT_TAG 1.0.1)
+FetchContent_MakeAvailable(bitcast)
+target_link_libraries(rivendell PRIVATE bitcast::bitcast)
+
 # if(RIVENDELL_BUILD_TESTS) enable_language(CXX) set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #
