@@ -25,6 +25,36 @@ endif()
 option(RIVENDELL_BUILD_TESTS "Build and run tests using CTest"
        ${RIVENDELL_IS_TOP_LEVEL})
 
+add_library(rivendell_flags INTERFACE)
+target_compile_options(
+  rivendell_flags
+  INTERFACE
+    -Wall
+    -Wextra
+    -Wpedantic
+    -Wconversion
+    -Wshadow
+    -Wstrict-prototypes
+    -Wmissing-prototypes
+    -Wold-style-definition
+    -Wredundant-decls
+    -Wformat=2
+    -Wcast-qual
+    -Wpointer-arith
+    -Wwrite-strings
+    -Wundef
+    -Wvla
+    -Wnull-dereference
+    -Wdouble-promotion
+    "$<$<C_COMPILER_ID:GNU>:-Wduplicated-cond;-Wduplicated-branches;-Wlogical-op;-Wjump-misses-init;-Wcast-align=strict>"
+    "$<$<C_COMPILER_ID:Clang,AppleClang>:-Wcast-align>"
+    "$<$<C_COMPILER_ID:GNU>:-fdiagnostics-color=always>"
+    "$<$<C_COMPILER_ID:Clang,AppleClang>:-fcolor-diagnostics>"
+    "$<$<CONFIG:Debug>:-g;-O0;-fno-omit-frame-pointer;-fsanitize=address,undefined;-fno-sanitize-recover=all>"
+)
+target_link_options(rivendell_flags INTERFACE
+                    "$<$<CONFIG:Debug>:-fsanitize=address,undefined>")
+
 add_library(${PROJECT_NAME})
 target_sources(${PROJECT_NAME} PRIVATE src/elf.c)
 add_library(rivendell::rivendell ALIAS ${PROJECT_NAME})
