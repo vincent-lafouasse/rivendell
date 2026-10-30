@@ -24,6 +24,8 @@ endif()
 
 option(RIVENDELL_BUILD_TESTS "Build and run tests using CTest"
        ${RIVENDELL_IS_TOP_LEVEL})
+option(RIVENDELL_SANITIZE "Build with ASan and UBSan in Debug"
+       ${RIVENDELL_IS_TOP_LEVEL})
 
 add_library(rivendell_flags INTERFACE)
 target_compile_options(
@@ -50,10 +52,16 @@ target_compile_options(
     "$<$<C_COMPILER_ID:Clang,AppleClang>:-Wcast-align>"
     "$<$<C_COMPILER_ID:GNU>:-fdiagnostics-color=always>"
     "$<$<C_COMPILER_ID:Clang,AppleClang>:-fcolor-diagnostics>"
-    "$<$<CONFIG:Debug>:-g;-O0;-fno-omit-frame-pointer;-fsanitize=address,undefined;-fno-sanitize-recover=all>"
-)
-target_link_options(rivendell_flags INTERFACE
-                    "$<$<CONFIG:Debug>:-fsanitize=address,undefined>")
+    "$<$<CONFIG:Debug>:-g;-O0;-fno-omit-frame-pointer>")
+if(RIVENDELL_SANITIZE)
+  target_compile_options(
+    rivendell_flags
+    INTERFACE
+      "$<$<CONFIG:Debug>:-fsanitize=address,undefined;-fno-sanitize-recover=all>"
+  )
+  target_link_options(rivendell_flags INTERFACE
+                      "$<$<CONFIG:Debug>:-fsanitize=address,undefined>")
+endif()
 
 include(FetchContent)
 FetchContent_Declare(
