@@ -53,7 +53,7 @@ static enum ElfError validate_ident(const u8 ident[static EI_NIDENT])
 
     switch (ident[EI_DATA]) {
         case EI_DATA_LE:
-        case EI_DATA_LE:
+        case EI_DATA_BE:
             break;
         default:
             return ELF_BAD_ENDIAN;
