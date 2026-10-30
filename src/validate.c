@@ -46,5 +46,20 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
     // 0x08      we skip EI_ABIVERSION, no checks
     // 0x09-0x0A we skip 7 bytes of padding
 
+    switch (hdr->e_type) {
+        case 0x0:
+        case 0x01:
+        case 0x02:
+        case 0x03:
+        case 0x04:
+        case 0xfe00:
+        case 0xfeff:
+        case 0xff00:
+        case 0xffff:
+            break;
+        default:
+            return ELF_BAD_TYPE;
+    }
+
     return ELF_OK;
 }
