@@ -40,5 +40,18 @@ struct Elf32_Ehdr read_ehdr(const u8 data[static 52], enum Endianness endian)
     struct Elf32_Ehdr out = {0};
 
     memcpy(out.e_ident, data, EI_NIDENT);
+    out.e_type = read_u16(data + EI_NIDENT);
+    out.e_machine = read_u16(data + EI_NIDENT + 2);
+    out.e_version = read_u32(data + EI_NIDENT + 4);
+    out.e_entry = read_u32(data + EI_NIDENT + 8);
+    out.e_phoff = read_u32(data + EI_NIDENT + 12);
+    out.e_shoff = read_u32(data + EI_NIDENT + 16);
+    out.e_flags = read_u32(data + EI_NIDENT + 20);
+    out.e_ehsize = read_u16(data + EI_NIDENT + 24);
+    out.e_phentsize = read_u16(data + EI_NIDENT + 26);
+    out.e_phnum = read_u16(data + EI_NIDENT + 28);
+    out.e_shentsize = read_u16(data + EI_NIDENT + 30);
+    out.e_shnum = read_u16(data + EI_NIDENT + 32);
+    out.e_shstrndx = read_u16(data + EI_NIDENT + 34);
     return out;
 }
