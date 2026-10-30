@@ -31,3 +31,6 @@ struct Elf32_Phdr {
     uint32_t p_flags;
     uint32_t p_align;
 };
+
+_Static_assert(sizeof(struct Elf32_Ehdr) == 52, "Ehdr layout");
+_Static_assert(sizeof(struct Elf32_Phdr) == 32, "Phdr layout");
