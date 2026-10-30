@@ -51,6 +51,19 @@ static bool is_assigned_machine(u16 m)
     return true;
 }
 
+static enum ElfError validate_riscv_flags(u32 e_flags)
+{
+    if (e_flags & EF_RISCV_RESERVED) {
+        return ELF_BAD_FLAGS;
+    }
+    // everything else is a valid flag the emulator may not implement:
+    // hard-float ABIs, RVE, TSO, RV64ILP32, RVY and non-standard bits
+    if (e_flags & ~(u32)RISCV_SUPPORTED_FLAGS) {
+        return ELF_UNSUPPORTED_FLAGS;
+    }
+    return ELF_OK;
+}
+
 static enum ElfError validate_ident(const u8 ident[static EI_NIDENT])
 {
     if (memcmp(ident, MAGIC, 4) != 0) {
