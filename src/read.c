@@ -18,15 +18,24 @@ enum ElfError parse_endianness(uint8_t ei_data, enum Endianness out[static 1])
     }
 }
 
-typedef u16 (*U16_reader)(const u8 bytes[2]);
-typedef u32 (*U32_reader)(const u8 bytes[4]);
-
 struct Elf32_Ehdr read_ehdr(const u8 data[static 52], enum Endianness endian)
 {
-    U16_reader read_u16 =
-        (endian == ENDIAN_LITTLE) ? bitcastU16_LE : bitcastU16_BE;
-    U32_reader read_u32 =
-        (endian == ENDIAN_LITTLE) ? bitcastU32_LE : bitcastU32_BE;
+    u16 (*read_u16)(const u8 bytes[2]);
+    u32 (*read_u32)(const u8 bytes[4]);
+
+    switch (endian) {
+        case ENDIAN_LITTLE:
+            read_u16 = bitcastU16_LE;
+            read_u32 = bitcastU32_LE;
+            break;
+        case ENDIAN_BIG:
+            read_u16 = bitcastU16_BE;
+            read_u32 = bitcastU32_BE;
+            break;
+        default:
+            __builtin_trap();
+            __builtin_unreachable();
+    }
 
     struct Elf32_Ehdr out = {0};
 
