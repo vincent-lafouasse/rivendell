@@ -26,8 +26,7 @@ struct Elf32_Ehdr {
 };
 
 enum ElfError parse_endianness(uint8_t ei_data, enum Endianness out[static 1]);
-struct Elf32_Ehdr read_elf_header(const u8 data[static 52],
-                                  enum Endianness endian);
+struct Elf32_Ehdr read_ehdr(const u8 data[static 52], enum Endianness endian);
 
 struct Elf32_Phdr {
     u32 p_type;
@@ -40,4 +39,4 @@ struct Elf32_Phdr {
     u32 p_align;
 };
 
-struct Elf32_Phdr read_program_header(const u8 data[static 32]);
+struct Elf32_Phdr read_phdr(const u8 data[static 32]);

@@ -2,8 +2,7 @@
 
 #include <string.h>
 
-struct Elf32_Ehdr read_elf_header(const u8 data[static 52],
-                                  enum Endianness endian)
+struct Elf32_Ehdr read_ehdr(const u8 data[static 52], enum Endianness endian)
 {
     struct Elf32_Ehdr out = {0};
 
