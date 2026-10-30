@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "debug.h"
+
 #define MAGIC "\x7f\x45\x4c\x46"
 
 enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
@@ -19,13 +21,14 @@ enum ElfError validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
             return ELF_BAD_CLASS;
     }
 
+    // already checked
     const uint8_t ei_data = hdr->e_ident[0x05];
     switch (ei_data) {
         case 1:
         case 2:
             break;
         default:
-            return ELF_BAD_ENDIAN;
+            UNREACHABLE();
     }
 
     return ELF_OK;
