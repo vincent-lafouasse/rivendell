@@ -21,6 +21,11 @@
 
 #define EV_ONLY_VALUE 1
 
+// on-disk sizes of the Elf32 structures
+#define ELF32_EHDR_SIZE 52
+#define ELF32_PHDR_SIZE 32
+#define ELF32_SHDR_SIZE 40
+
 // RISC-V e_flags, from the RISC-V ELF psABI, section "File Header":
 // https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc
 #define EF_RISCV_RVC 0x00000001
