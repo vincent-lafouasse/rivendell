@@ -4,6 +4,8 @@
 
 #include "raw.h"
 
+#define USAGE "Usage: rivendell_readelf binary.elf"
+
 __attribute__((noreturn, format(printf, 1, 2))) static void die(const char* fmt,
                                                                 ...)
 {
@@ -20,7 +22,9 @@ __attribute__((noreturn, format(printf, 1, 2))) static void die(const char* fmt,
 
 int main(int ac, char** av)
 {
-    (void)ac;
-    (void)av;
-    die("dummy");
+    if (ac != 2) {
+        die(USAGE);
+    }
+
+    const char* const elf_path = av[1];
 }
