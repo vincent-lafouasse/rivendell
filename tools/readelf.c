@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,6 +47,8 @@ static struct Buffer read_file_or_die(const char* const path)
     if (!data) {
         die("Out of memory");
     }
+
+    assert(fread(data, 1, sz, f) == sz);
 
     return (struct Buffer){.data = data, .sz = sz};
 }
