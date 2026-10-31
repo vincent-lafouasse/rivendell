@@ -28,6 +28,27 @@ static size_t file_size(FILE* f)
     return sz;
 }
 
+struct Buffer {
+    u8* data;
+    size_t sz;
+};
+
+static struct Buffer read_file_or_die(const char* const path)
+{
+    FILE* f = fopen(path, "r");
+    if (!f) {
+        die("Failed to open %s", path);
+    }
+
+    const size_t sz = file_size(f);
+    u8* data = malloc(sz);
+    if (!data) {
+        die("Out of memory");
+    }
+
+    return (struct Buffer){.data = data, .sz = sz};
+}
+
 int main(int ac, char** av)
 {
     if (ac != 2) {
@@ -35,4 +56,6 @@ int main(int ac, char** av)
     }
 
     const char* const elf_path = av[1];
+    const struct Buffer bytes = read_file_or_die(elf_path);
+    (void)bytes;
 }
