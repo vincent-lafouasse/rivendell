@@ -125,6 +125,7 @@ enum RvdError rvd_validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
         return RVD_BAD_TYPE;
     }
     if (e_type != ET_EXEC) {
+        // we want to load executables, this isn't one
         return RVD_UNSUPPORTED_TYPE;
     }
 
