@@ -1,5 +1,6 @@
 #include "raw.h"
 
+#include <assert.h>
 #include <string.h>
 
 #include <bitcast.h>
@@ -69,19 +70,22 @@ struct Elf32_Ehdr rvd_read_ehdr(const u8 data[static 52],
     struct Elf32_Ehdr out = {0};
 
     memcpy(out.e_ident, data, EI_NIDENT);
-    out.e_type = reader.read_u16(data + EI_NIDENT);
-    out.e_machine = reader.read_u16(data + EI_NIDENT + 2);
-    out.e_version = reader.read_u32(data + EI_NIDENT + 4);
-    out.e_entry = reader.read_u32(data + EI_NIDENT + 8);
-    out.e_phoff = reader.read_u32(data + EI_NIDENT + 12);
-    out.e_shoff = reader.read_u32(data + EI_NIDENT + 16);
-    out.e_flags = reader.read_u32(data + EI_NIDENT + 20);
-    out.e_ehsize = reader.read_u16(data + EI_NIDENT + 24);
-    out.e_phentsize = reader.read_u16(data + EI_NIDENT + 26);
-    out.e_phnum = reader.read_u16(data + EI_NIDENT + 28);
-    out.e_shentsize = reader.read_u16(data + EI_NIDENT + 30);
-    out.e_shnum = reader.read_u16(data + EI_NIDENT + 32);
-    out.e_shstrndx = reader.read_u16(data + EI_NIDENT + 34);
+
+    size_t i = EI_NIDENT;
+    out.e_type = take_u16(data, &i, reader);
+    out.e_machine = take_u16(data, &i, reader);
+    out.e_version = take_u32(data, &i, reader);
+    out.e_entry = take_u32(data, &i, reader);
+    out.e_phoff = take_u32(data, &i, reader);
+    out.e_shoff = take_u32(data, &i, reader);
+    out.e_flags = take_u32(data, &i, reader);
+    out.e_ehsize = take_u16(data, &i, reader);
+    out.e_phentsize = take_u16(data, &i, reader);
+    out.e_phnum = take_u16(data, &i, reader);
+    out.e_shentsize = take_u16(data, &i, reader);
+    out.e_shnum = take_u16(data, &i, reader);
+    out.e_shstrndx = take_u16(data, &i, reader);
+    assert(i == 52);
     return out;
 }
 
@@ -91,13 +95,15 @@ struct Elf32_Phdr rvd_read_phdr(const u8 data[static 32],
     const struct IntReader reader = int_reader(endian);
     struct Elf32_Phdr out = {0};
 
-    out.p_type = reader.read_u32(data);
-    out.p_offset = reader.read_u32(data + 4);
-    out.p_vaddr = reader.read_u32(data + 8);
-    out.p_paddr = reader.read_u32(data + 12);
-    out.p_filesz = reader.read_u32(data + 16);
-    out.p_memsz = reader.read_u32(data + 20);
-    out.p_flags = reader.read_u32(data + 24);
-    out.p_align = reader.read_u32(data + 28);
+    size_t i = 0;
+    out.p_type = take_u32(data, &i, reader);
+    out.p_offset = take_u32(data, &i, reader);
+    out.p_vaddr = take_u32(data, &i, reader);
+    out.p_paddr = take_u32(data, &i, reader);
+    out.p_filesz = take_u32(data, &i, reader);
+    out.p_memsz = take_u32(data, &i, reader);
+    out.p_flags = take_u32(data, &i, reader);
+    out.p_align = take_u32(data, &i, reader);
+    assert(i == 32);
     return out;
 }
