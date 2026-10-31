@@ -6,6 +6,9 @@
 
 #define EI_NIDENT 16
 
+#define EHDR_SIZE 52
+#define PHDR_SIZE 32
+
 enum Endianness { ENDIAN_LITTLE, ENDIAN_BIG };
 
 struct Elf32_Ehdr {
@@ -26,7 +29,7 @@ struct Elf32_Ehdr {
 };
 
 enum Endianness rvd_parse_endianness(uint8_t ei_data);
-struct Elf32_Ehdr rvd_read_ehdr(const u8 data[static 52],
+struct Elf32_Ehdr rvd_read_ehdr(const u8 data[static EHDR_SIZE],
                                 enum Endianness endian);
 
 struct Elf32_Phdr {
@@ -40,5 +43,5 @@ struct Elf32_Phdr {
     u32 p_align;
 };
 
-struct Elf32_Phdr rvd_read_phdr(const u8 data[static 32],
+struct Elf32_Phdr rvd_read_phdr(const u8 data[static PHDR_SIZE],
                                 enum Endianness endian);
