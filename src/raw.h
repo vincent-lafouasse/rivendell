@@ -6,6 +6,8 @@
 
 #define EI_NIDENT 16
 
+#define EI_DATA 0x05
+
 #define EHDR_SIZE 52
 #define PHDR_SIZE 32
 
