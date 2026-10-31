@@ -2,3 +2,40 @@ BasedOnStyle: Chromium
 
 BreakBeforeBraces: WebKit
 IndentWidth: 4
+
+# One argument/parameter per line, so adding one touches one line
+BinPackParameters: false
+BinPackArguments: false
+
+# Break right after "(" and indent by a fixed amount. Renaming a function
+# no longer re-indents every continuation line.
+AlignAfterOpenBracket: AlwaysBreak
+
+# Never column-align anything
+AlignConsecutiveAssignments: None
+AlignConsecutiveDeclarations: None
+AlignConsecutiveMacros: None
+AlignConsecutiveBitFields: None
+AlignEscapedNewlines: Left
+
+# Trailing comments stay one space after code instead of lining up
+# in a column (clang-format 16+; on older versions use `false`)
+AlignTrailingComments:
+  Kind: Never
+
+# Don't collapse anything onto one line, so growing a body is a pure addition
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+AllowShortEnumsOnASingleLine: false
+
+# Add braces to bare if/else/for/while (clang-format 15+, still marked experimental)
+InsertBraces: true
+
+# Don't rewrap comments when a word changes
+ReflowComments: false
+
+# Deterministic include order
+SortIncludes: CaseSensitive
+IncludeBlocks: Preserve
