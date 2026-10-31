@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "raw.h"
+#include "validate.h"
 
 #define USAGE "Usage: rivendell_readelf binary.elf"
 
@@ -57,6 +58,15 @@ int main(int ac, char** av)
 
     const char* const elf_path = av[1];
     const struct Buffer bytes = read_file_or_die(elf_path);
+
+    const enum Endianness endian = rvd_parse_endianness(bytes.data[EI_DATA]);
+
+    const struct Elf32_Ehdr raw_header = rvd_read_ehdr(bytes.data, endian);
+
+    const enum RvdError err = rvd_validate_ehdr(&raw_header);
+    if (err != RVD_OK) {
+        die("Validation error: %s", rvd_error_str(err));
+    }
 
     free(bytes.data);
 }
