@@ -20,6 +20,14 @@ __attribute__((noreturn, format(printf, 1, 2))) static void die(const char* fmt,
     exit(EXIT_FAILURE);
 }
 
+static size_t file_size(FILE* f)
+{
+    fseek(f, 0L, SEEK_END);
+    const size_t sz = (size_t)ftell(f);
+    rewind(f);
+    return sz;
+}
+
 int main(int ac, char** av)
 {
     if (ac != 2) {
