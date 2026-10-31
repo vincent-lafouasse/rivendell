@@ -57,5 +57,6 @@ int main(int ac, char** av)
 
     const char* const elf_path = av[1];
     const struct Buffer bytes = read_file_or_die(elf_path);
-    (void)bytes;
+
+    free(bytes.data);
 }
