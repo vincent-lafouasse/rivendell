@@ -2,9 +2,13 @@
 
 #include "types.h"
 
-enum Machine { DUMMY_ };
+enum Machine {
+    DUMMY_
+};
 
-enum RiscvFloatAbi { DUMMY };
+enum RiscvFloatAbi {
+    DUMMY
+};
 
 struct RiscvFlags {
     u32 dummy;

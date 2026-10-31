@@ -1,3 +1,5 @@
 #include <rivendell/elf.h>
 
-int main(void) {}
+int main(void)
+{
+}

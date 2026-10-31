@@ -34,7 +34,7 @@
 #define EF_RISCV_TSO 0x00000010
 #define EF_RISCV_RV64ILP32 0x00000020  // experimental, RV64 hardware only
 #define EF_RISCV_RVY 0x00000040
-#define EF_RISCV_RESERVED 0x00ffff80     // bits 7-23, must not be set
+#define EF_RISCV_RESERVED 0x00ffff80  // bits 7-23, must not be set
 #define EF_RISCV_NONSTANDARD 0xff000000  // bits 24-31, toolchain-defined
 
 // what the emulator can run: soft-float RV32I, no compressed instructions.

@@ -63,8 +63,9 @@ enum Endianness rvd_parse_endianness(uint8_t ei_data)
     }
 }
 
-struct Elf32_Ehdr rvd_read_ehdr(const u8 data[static EHDR_SIZE],
-                                enum Endianness endian)
+struct Elf32_Ehdr rvd_read_ehdr(
+    const u8 data[static EHDR_SIZE],
+    enum Endianness endian)
 {
     const struct IntReader reader = int_reader(endian);
     struct Elf32_Ehdr out = {0};
@@ -89,8 +90,9 @@ struct Elf32_Ehdr rvd_read_ehdr(const u8 data[static EHDR_SIZE],
     return out;
 }
 
-struct Elf32_Phdr rvd_read_phdr(const u8 data[static PHDR_SIZE],
-                                enum Endianness endian)
+struct Elf32_Phdr rvd_read_phdr(
+    const u8 data[static PHDR_SIZE],
+    enum Endianness endian)
 {
     const struct IntReader reader = int_reader(endian);
     struct Elf32_Phdr out = {0};

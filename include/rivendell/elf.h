@@ -39,9 +39,10 @@ enum RvdError {
 };
 const char* rvd_error_str(enum RvdError e);
 
-enum RvdError rvd_elf32_load(const uint8_t* file,
-                             size_t file_size,
-                             uint8_t* ram,
-                             size_t ram_size,
-                             uint32_t ram_base,
-                             uint32_t* entry);
+enum RvdError rvd_elf32_load(
+    const uint8_t* file,
+    size_t file_size,
+    uint8_t* ram,
+    size_t ram_size,
+    uint32_t ram_base,
+    uint32_t* entry);
