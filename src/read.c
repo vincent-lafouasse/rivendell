@@ -32,6 +32,22 @@ static struct IntReader int_reader(enum Endianness endian)
     }
 }
 
+static u16 take_u16(const u8* data, size_t i[static 1], struct IntReader reader)
+{
+    // straight to UB, have fun
+    const u16 out = reader.read_u16(data + *i);
+    *i += 2;
+    return out;
+}
+
+static u32 take_u32(const u8* data, size_t i[static 1], struct IntReader reader)
+{
+    // straight to UB, have fun
+    const u32 out = reader.read_u32(data + *i);
+    *i += 4;
+    return out;
+}
+
 enum Endianness rvd_parse_endianness(uint8_t ei_data)
 {
     switch (ei_data) {
