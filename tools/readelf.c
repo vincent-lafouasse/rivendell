@@ -49,6 +49,7 @@ static struct Buffer read_file_or_die(const char* const path)
     }
 
     assert(fread(data, 1, sz, f) == sz);
+    fclose(f);
 
     return (struct Buffer){.data = data, .sz = sz};
 }
