@@ -42,16 +42,3 @@ struct Elf32_Phdr {
 
 struct Elf32_Phdr rvd_read_phdr(const u8 data[static 32],
                                 enum Endianness endian);
-
-struct Elf32_Shdr {
-    u32 sh_name;
-    u32 sh_type;
-    u32 sh_flags;
-    u32 sh_addr;
-    u32 sh_offset;
-    u32 sh_size;
-    u32 sh_link;
-    u32 sh_info;
-    u32 sh_addralign;
-    u32 sh_entsize;
-};
