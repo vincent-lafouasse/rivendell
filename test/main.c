@@ -1,4 +1,4 @@
-#include <rivendell/elf.h>
+#include <rivendell.h>
 
 int main(void)
 {

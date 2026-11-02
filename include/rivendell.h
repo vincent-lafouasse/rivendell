@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "./error.h"
+#include "./rivendell/error.h"
 
 enum RvdError rvd_elf32_load(
     const uint8_t* file,

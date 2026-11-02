@@ -1,3 +1,3 @@
-#include <rivendell/elf.h>
+#include <rivendell.h>
 
 #include "raw.h"
