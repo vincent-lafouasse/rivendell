@@ -16,6 +16,8 @@ enum RvdError {
     RVD_BAD_ENDIAN,
     RVD_BAD_IDENT_VERSION,
     RVD_BAD_OSABI,
+    RVD_UNSUPPORTED_OSABI,
+    RVD_UNSUPPORTED_ABI_VERSION,
 
     // file header
     RVD_BAD_TYPE,

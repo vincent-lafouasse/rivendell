@@ -19,6 +19,10 @@ const char* rvd_error_str(enum RvdError e)
             return "unsupported e_ident version";
         case RVD_BAD_OSABI:
             return "invalid OS/ABI";
+        case RVD_UNSUPPORTED_OSABI:
+            return "unsupported OS/ABI (expected none/SYSV)";
+        case RVD_UNSUPPORTED_ABI_VERSION:
+            return "unsupported ABI version (expected 0)";
         case RVD_BAD_TYPE:
             return "invalid ELF type";
         case RVD_UNSUPPORTED_TYPE:
