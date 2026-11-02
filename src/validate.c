@@ -135,9 +135,18 @@ static enum RvdError validate_ident(const u8 ident[static EI_NIDENT])
     if (ei_osabi == 0x04 || ei_osabi == 0x05 || ei_osabi > 0x12) {
         return RVD_BAD_OSABI;
     }
+    // the emulator runs bare-metal kernels, anything targeting an OS would
+    // expect that OS's syscalls
+    if (ei_osabi != ELFOSABI_NONE) {
+        return RVD_UNSUPPORTED_OSABI;
+    }
 
-    // 0x08      we skip EI_ABIVERSION, no checks
-    // 0x09-0x0F we skip 7 bytes of padding
+    // its meaning depends on EI_OSABI, ELFOSABI_NONE only defines 0
+    if (ident[EI_ABIVERSION] != EI_ABIVERSION_NONE) {
+        return RVD_UNSUPPORTED_ABI_VERSION;
+    }
+
+    // 0x09-0x0F we skip 7 bytes of padding, the spec says to ignore them
 
     return RVD_OK;
 }
