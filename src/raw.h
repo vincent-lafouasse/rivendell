@@ -2,14 +2,8 @@
 
 #include <rivendell/elf.h>
 
+#include "elf_spec.h"
 #include "types.h"
-
-#define EI_NIDENT 16
-
-#define EI_DATA 0x05
-
-#define EHDR_SIZE 52
-#define PHDR_SIZE 32
 
 enum Endianness {
     ENDIAN_LITTLE,
