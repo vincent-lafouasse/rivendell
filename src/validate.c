@@ -3,43 +3,66 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define MAGIC "\x7f\x45\x4c\x46"
+static const u8 MAGIC[4] = {0x7f, 'E', 'L', 'F'};
 
-#define EI_CLASS 0x04
-#define EI_CLASS_32BIT 1
-#define EI_CLASS_64BIT 2
-#define EI_DATA 0x05
-#define EI_DATA_LE 1
-#define EI_DATA_BE 2
-#define EI_VERSION 0x06
-#define EI_VERSION_ONLY_VALUE 1
-#define EI_OSABI 0x07
+// e_ident byte indices, EI_DATA lives in raw.h since reading needs it
+enum EiIndex {
+    EI_CLASS = 0x04,
+    EI_VERSION = 0x06,
+    EI_OSABI = 0x07,
+};
 
-#define ET_EXEC 0x02
+// e_ident[EI_CLASS]
+enum EiClass {
+    EI_CLASS_32BIT = 1,
+    EI_CLASS_64BIT = 2,
+};
 
-#define EM_RISCV 0xf3
+// e_ident[EI_DATA]
+enum EiData {
+    EI_DATA_LE = 1,
+    EI_DATA_BE = 2,
+};
 
-#define EV_ONLY_VALUE 1
+// e_ident[EI_VERSION] and e_version, the spec only defines 1
+enum ElfVersion {
+    EI_VERSION_ONLY_VALUE = 1,
+    EV_ONLY_VALUE = 1,
+};
 
-// on-disk sizes of the Elf32 structures
-#define ELF32_EHDR_SIZE 52
-#define ELF32_PHDR_SIZE 32
-#define ELF32_SHDR_SIZE 40
+// e_type
+enum ElfType {
+    ET_EXEC = 0x02,
+};
+
+// e_machine
+enum ElfMachine {
+    EM_RISCV = 0xf3,
+};
+
+// on-disk size of an Elf32 section header, EHDR_SIZE and PHDR_SIZE live in
+// raw.h
+enum Elf32Size {
+    SHDR_SIZE = 40,
+};
 
 // RISC-V e_flags, from the RISC-V ELF psABI, section "File Header":
 // https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc
-#define EF_RISCV_RVC 0x00000001
-#define EF_RISCV_FLOAT_ABI 0x00000006  // 0 soft, 2 single, 4 double, 6 quad
-#define EF_RISCV_RVE 0x00000008
-#define EF_RISCV_TSO 0x00000010
-#define EF_RISCV_RV64ILP32 0x00000020  // experimental, RV64 hardware only
-#define EF_RISCV_RVY 0x00000040
-#define EF_RISCV_RESERVED 0x00ffff80  // bits 7-23, must not be set
-#define EF_RISCV_NONSTANDARD 0xff000000  // bits 24-31, toolchain-defined
+enum RiscvFlags {
+    EF_RISCV_RVC = 0x00000001,
+    EF_RISCV_FLOAT_ABI = 0x00000006,  // 0 soft, 2 single, 4 double, 6 quad
+    EF_RISCV_RVE = 0x00000008,
+    EF_RISCV_TSO = 0x00000010,
+    EF_RISCV_RV64ILP32 = 0x00000020,  // experimental, RV64 hardware only
+    EF_RISCV_RVY = 0x00000040,
+    EF_RISCV_RESERVED = 0x00ffff80,  // bits 7-23, must not be set
 
-// what the emulator can run: soft-float RV32I, no compressed instructions.
-// add EF_RISCV_RVC here once C is implemented
-#define RISCV_SUPPORTED_FLAGS 0x00000000
+    // what the emulator can run: soft-float RV32I, no compressed instructions.
+    // add EF_RISCV_RVC here once C is implemented
+    RISCV_SUPPORTED_FLAGS = 0x00000000,
+};
+// bits 24-31 are toolchain-defined. too big for an int enumerator in C99
+static const u32 EF_RISCV_NONSTANDARD = 0xff000000;
 
 // e_machine values named by GNU readelf 2.47, the rest are unassigned.
 // numbers get assigned over time, extend this when readelf learns new ones
@@ -73,7 +96,7 @@ static enum RvdError validate_riscv_flags(u32 e_flags)
 
 static enum RvdError validate_ident(const u8 ident[static EI_NIDENT])
 {
-    if (memcmp(ident, MAGIC, 4) != 0) {
+    if (memcmp(ident, MAGIC, sizeof MAGIC) != 0) {
         return RVD_BAD_MAGIC;
     }
 
