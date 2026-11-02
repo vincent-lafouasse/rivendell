@@ -23,7 +23,7 @@ enum EiData {
     EI_DATA_BE = 2,
 };
 
-// e_ident[EI_OSABI] and e_ident[EI_ABIVERSION], only what we support
+// e_ident[EI_OSABI] and e_ident[EI_ABIVERSION], only what's used so far
 enum EiOsAbi {
     ELFOSABI_NONE = 0,  // no OS extensions, a.k.a. SYSV
     EI_ABIVERSION_NONE = 0,
@@ -44,6 +44,30 @@ enum ElfType {
 enum ElfMachine {
     EM_RISCV = 0xf3,
 };
+
+// RISC-V e_flags, from the RISC-V ELF psABI, section "File Header":
+// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc
+enum RiscvFlags {
+    EF_RISCV_RVC = 0x00000001,
+    EF_RISCV_FLOAT_ABI = 0x00000006,  // mask for the field below
+    EF_RISCV_RVE = 0x00000008,
+    EF_RISCV_TSO = 0x00000010,
+    EF_RISCV_RV64ILP32 = 0x00000020,  // experimental, RV64 hardware only
+    EF_RISCV_RVY = 0x00000040,
+    EF_RISCV_RESERVED = 0x00ffff80,  // bits 7-23, must not be set
+};
+
+// values of the EF_RISCV_FLOAT_ABI field
+enum RiscvFloatAbi {
+    EF_RISCV_FLOAT_ABI_SOFT = 0x00000000,
+    EF_RISCV_FLOAT_ABI_SINGLE = 0x00000002,
+    EF_RISCV_FLOAT_ABI_DOUBLE = 0x00000004,
+    EF_RISCV_FLOAT_ABI_QUAD = 0x00000006,
+};
+
+// bits 24-31 are toolchain-defined. a macro since it's too big for an int
+// enumerator in C99
+#define EF_RISCV_NONSTANDARD 0xff000000u
 
 // on-disk size of Elf32 headers
 enum Elf32Size {
