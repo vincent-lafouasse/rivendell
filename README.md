@@ -1,6 +1,6 @@
 # rivendell
 
-An ELF loader library for `raven`. Its job is to validate an executable and
+An ELF loader library for [`raven`](https://github.com/vincent-lafouasse/raven). Its job is to validate an executable and
 copy its loadable segments into the emulator's RAM, so the emulator can boot a
 bare-metal image such as an RV32 port of xv6.
 
