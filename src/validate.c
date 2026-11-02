@@ -61,8 +61,9 @@ enum RiscvFlags {
     // add EF_RISCV_RVC here once C is implemented
     RISCV_SUPPORTED_FLAGS = 0x00000000,
 };
-// bits 24-31 are toolchain-defined. too big for an int enumerator in C99
-static const u32 EF_RISCV_NONSTANDARD = 0xff000000;
+// bits 24-31 are toolchain-defined. a macro since it's too big for an int
+// enumerator in C99
+#define EF_RISCV_NONSTANDARD 0xff000000u
 
 // e_machine values named by GNU readelf 2.47, the rest are unassigned.
 // numbers get assigned over time, extend this when readelf learns new ones
