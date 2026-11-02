@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-static const u8 MAGIC[4] = {0x7f, 'E', 'L', 'F'};
+static const u8 k_magic[4] = {0x7f, 'E', 'L', 'F'};
 
 // e_ident byte indices, EI_DATA lives in raw.h since reading needs it
 enum EiIndex {
@@ -97,7 +97,7 @@ static enum RvdError validate_riscv_flags(u32 e_flags)
 
 static enum RvdError validate_ident(const u8 ident[static EI_NIDENT])
 {
-    if (memcmp(ident, MAGIC, sizeof MAGIC) != 0) {
+    if (memcmp(ident, k_magic, sizeof k_magic) != 0) {
         return RVD_BAD_MAGIC;
     }
 
