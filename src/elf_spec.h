@@ -45,8 +45,7 @@ enum ElfMachine {
     EM_RISCV = 0xf3,
 };
 
-// on-disk size of an Elf32 section header
-// raw.h
+// on-disk size of Elf32 headers
 enum Elf32Size {
     EHDR_SIZE = 52,
     PHDR_SIZE = 32,
