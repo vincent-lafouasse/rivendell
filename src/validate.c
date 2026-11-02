@@ -5,10 +5,12 @@
 
 static const u8 k_magic[4] = {0x7f, 'E', 'L', 'F'};
 
-// what the emulator can run: soft-float RV32I, no compressed instructions
+// what the emulator can run: soft-float RV32I, no compressed instructions.
+// RVE is a subset of RV32I, and harts run one at a time satisfy TSO
 enum {
-    RISCV_SUPPORTED_FLAGS =
-        EF_RISCV_FLOAT_ABI_SOFT,  // | EF_RISCV_RVC once C is implemented
+    RISCV_SUPPORTED_FLOAT_ABI = EF_RISCV_FLOAT_ABI_SOFT,
+    // | EF_RISCV_RVC once C is implemented
+    RISCV_SUPPORTED_FLAGS = EF_RISCV_RVE | EF_RISCV_TSO,
 };
 
 // e_machine values named by GNU readelf 2.47, the rest are unassigned.
@@ -33,9 +35,12 @@ static enum RvdError validate_riscv_flags(u32 e_flags)
     if (e_flags & EF_RISCV_RESERVED) {
         return RVD_BAD_FLAGS;
     }
+    if ((e_flags & EF_RISCV_FLOAT_ABI) != RISCV_SUPPORTED_FLOAT_ABI) {
+        return RVD_UNSUPPORTED_FLAGS;
+    }
     // everything else is a valid flag the emulator may not implement:
-    // hard-float ABIs, RVE, TSO, RV64ILP32, RVY and non-standard bits
-    if (e_flags & ~(u32)RISCV_SUPPORTED_FLAGS) {
+    // RVC, RV64ILP32, RVY and non-standard bits
+    if (e_flags & ~(u32)(RISCV_SUPPORTED_FLAGS | EF_RISCV_FLOAT_ABI)) {
         return RVD_UNSUPPORTED_FLAGS;
     }
     return RVD_OK;
