@@ -1,6 +1,6 @@
 #pragma once
 
-#include <rivendell/elf.h>
+#include <rivendell/error.h>
 
 #include "elf_spec.h"
 #include "types.h"

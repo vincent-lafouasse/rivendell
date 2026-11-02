@@ -1,4 +1,4 @@
-#include <rivendell/elf.h>
+#include <rivendell/error.h>
 
 const char* rvd_error_str(enum RvdError e)
 {
