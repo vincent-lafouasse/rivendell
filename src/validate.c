@@ -25,6 +25,12 @@ enum EiData {
     EI_DATA_BE = 2,
 };
 
+// e_ident[EI_OSABI] and e_ident[EI_ABIVERSION], only what we support
+enum EiOsAbi {
+    ELFOSABI_NONE = 0,  // no OS extensions, a.k.a. SYSV
+    EI_ABIVERSION_NONE = 0,
+};
+
 // e_ident[EI_VERSION] and e_version, the spec only defines 1
 enum ElfVersion {
     EI_VERSION_ONLY_VALUE = 1,
