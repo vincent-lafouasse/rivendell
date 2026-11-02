@@ -10,6 +10,7 @@ enum EiIndex {
     EI_CLASS = 0x04,
     EI_VERSION = 0x06,
     EI_OSABI = 0x07,
+    EI_ABIVERSION = 0x08,
 };
 
 // e_ident[EI_CLASS]
