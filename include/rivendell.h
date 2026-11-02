@@ -11,4 +11,5 @@ enum RvdError rvd_elf32_load(
     uint8_t* ram,
     size_t ram_size,
     uint32_t ram_base,
-    uint32_t* entry);
+    uint32_t* entry
+);

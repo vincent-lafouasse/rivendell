@@ -7,9 +7,11 @@ IndentWidth: 4
 BinPackParameters: false
 BinPackArguments: false
 
-# Break right after "(" and indent by a fixed amount. Renaming a function
-# no longer re-indents every continuation line.
-AlignAfterOpenBracket: AlwaysBreak
+# Break right after "(", indent by a fixed amount, and put the closing ")"
+# on its own line. Renaming a function no longer re-indents continuation
+# lines, and appending a parameter touches exactly one line (clang-format 14+).
+AlignAfterOpenBracket: BlockIndent
+PenaltyReturnTypeOnItsOwnLine: 1000000
 
 # Never column-align anything
 AlignConsecutiveAssignments: None

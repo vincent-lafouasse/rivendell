@@ -25,7 +25,8 @@ struct Elf32_Ehdr {
 enum Endianness rvd_parse_endianness(uint8_t ei_data);
 struct Elf32_Ehdr rvd_read_ehdr(
     const u8 data[static EHDR_SIZE],
-    enum Endianness endian);
+    enum Endianness endian
+);
 
 struct Elf32_Phdr {
     u32 p_type;
@@ -40,4 +41,5 @@ struct Elf32_Phdr {
 
 struct Elf32_Phdr rvd_read_phdr(
     const u8 data[static PHDR_SIZE],
-    enum Endianness endian);
+    enum Endianness endian
+);

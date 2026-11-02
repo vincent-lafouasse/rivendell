@@ -10,7 +10,8 @@
 
 __attribute__((noreturn, format(printf, 1, 2))) static void die(
     const char* fmt,
-    ...)
+    ...
+)
 {
     fflush(stdout);
 
