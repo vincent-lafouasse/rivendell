@@ -102,6 +102,9 @@ static struct Buffer read_file_or_die(const char* const path)
 int main(int ac, const char* const* const av)
 {
     const struct Config cfg = parse_config_or_die(ac, av);
+    if (cfg.segments) {
+        die("segments are yet to be supported");
+    }
 
     const struct Buffer bytes = read_file_or_die(cfg.path);
 
