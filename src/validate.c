@@ -157,7 +157,7 @@ enum RvdError rvd_validate_ehdr(
         return machine_err;
     }
 
-    // e_entry, e_phoff, e_shoff are unchecked u32
+    // e_sh* are ignored
 
     return RVD_OK;
 }
