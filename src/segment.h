@@ -13,7 +13,6 @@ struct Elf32_Phdr rvd_read_phdr_at(
 );
 
 struct Segment32 {
-    /* enum SegmentType type */
     u32 offset;
     u32 addr;
     u32 filesz;
