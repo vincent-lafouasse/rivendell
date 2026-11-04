@@ -27,5 +27,6 @@ enum LoadSegmentStatus {
 enum LoadSegmentStatus get_load_segment_at(
     const u8* file,
     const struct Header32 hdr[static 1],
-    size_t i
+    size_t i,
+    struct Segment32 out[static 1]
 );
