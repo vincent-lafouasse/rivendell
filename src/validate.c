@@ -157,6 +157,11 @@ enum RvdError rvd_validate_ehdr(
         return machine_err;
     }
 
+    // an executable without program headers has nothing to load
+    if (hdr->e_phnum == 0) {
+        return RVD_NO_SEGMENTS;
+    }
+
     // e_sh* are ignored
 
     return RVD_OK;
