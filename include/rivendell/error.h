@@ -27,7 +27,9 @@ enum RvdError {
     RVD_BAD_EHSIZE,
     RVD_BAD_PHENTSIZE,
     RVD_NO_SEGMENTS,
+    RVD_UNSUPPORTED_PHNUM,
     RVD_PHDRS_OUT_OF_FILE,
+    RVD_MISALIGNED_ENTRY,
     RVD_BAD_ENTRY,
 
     // program headers

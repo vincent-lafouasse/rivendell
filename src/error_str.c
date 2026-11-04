@@ -43,8 +43,12 @@ const char* rvd_error_str(enum RvdError e)
             return "bad program header entry size";
         case RVD_NO_SEGMENTS:
             return "no program headers";
+        case RVD_UNSUPPORTED_PHNUM:
+            return "unsupported program header count (PN_XNUM)";
         case RVD_PHDRS_OUT_OF_FILE:
             return "program header table extends past end of file";
+        case RVD_MISALIGNED_ENTRY:
+            return "entry point is misaligned";
         case RVD_BAD_ENTRY:
             return "entry point is not in a loaded segment";
         case RVD_SEGMENT_OUT_OF_FILE:
