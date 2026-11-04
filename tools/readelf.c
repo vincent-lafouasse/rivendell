@@ -1,10 +1,25 @@
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "header.h"
 
-#define USAGE "Usage: rivendell_readelf binary.elf"
+#define USAGE "Usage: rivendell_readelf [--file-header|--segments] binary.elf"
+
+struct Config {
+    const char* const path;
+    bool header;
+    bool segments;
+};
+
+static struct Config parse_config_or_die(int ac, const char* const* const av)
+{
+    (void)ac;
+    (void)av;
+
+    return (struct Config){0};
+}
 
 __attribute__((noreturn, format(printf, 1, 2))) static void die(
     const char* fmt,
@@ -64,6 +79,9 @@ int main(int ac, char** av)
     if (ac != 2) {
         die(USAGE);
     }
+
+    const struct Config cfg = parse_config_or_die(ac, av);
+    (void)cfg;
 
     const char* const elf_path = av[1];
     const struct Buffer bytes = read_file_or_die(elf_path);
