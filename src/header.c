@@ -1,6 +1,5 @@
 #include "header.h"
 
-#include "elf_spec.h"
 #include "validate.h"
 
 enum RvdError rvd_parse_header(
