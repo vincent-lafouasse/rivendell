@@ -24,6 +24,7 @@ enum RvdError rvd_parse_header(
 
     *out = (struct Header32){
         .endian = endian,
+        .entry = raw.e_entry,
         .ph_offset = raw.e_phoff,
         .ph_num = raw.e_phnum,
     };
