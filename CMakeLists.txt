@@ -103,4 +103,14 @@ if(RIVENDELL_BUILD_TESTS)
   target_link_libraries(dummy PRIVATE rivendell_core)
   include(CTest)
   enable_testing()
+
+  if(RIVENDELL_BUILD_TOOLS)
+    add_test(
+      NAME compare_readelf
+      COMMAND
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/readelf/compare_readelf.sh
+        $<TARGET_FILE:rivendell_readelf>
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/readelf)
+    set_tests_properties(compare_readelf PROPERTIES SKIP_RETURN_CODE 77)
+  endif()
 endif()
