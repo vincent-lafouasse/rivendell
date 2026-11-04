@@ -17,7 +17,7 @@ __attribute__((noreturn, format(printf, 1, 2))) static void die(
 
     va_list ap;
     va_start(ap, fmt);
-    fputs("raven: ", stderr);
+    fputs("rivendell_readelf: ", stderr);
     vfprintf(stderr, fmt, ap);
     fputc('\n', stderr);
     va_end(ap);
