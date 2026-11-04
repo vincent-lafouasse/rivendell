@@ -1,1 +1,27 @@
 #include "header.h"
+
+#include "elf_spec.h"
+#include "validate.h"
+
+enum RvdError rvd_parse_header(
+    const u8* file,
+    size_t file_size,
+    struct Header32 out[static 1]
+)
+{
+    const enum Endianness endian = rvd_parse_endianness(file[EI_DATA]);
+
+    const struct Elf32_Ehdr raw = rvd_read_ehdr(file, endian);
+
+    enum RvdError validation_err = rvd_validate_ehdr(&raw, file_size);
+    if (validation_err != RVD_OK) {
+        return validation_err;
+    }
+
+    *out = (struct Header32){
+        .endian = endian,
+        .ph_offset = raw.e_phoff,
+        .ph_num = raw.e_phnum,
+    };
+    return RVD_OK;
+}
