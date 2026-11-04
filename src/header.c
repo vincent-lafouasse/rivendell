@@ -17,7 +17,7 @@ enum RvdError rvd_parse_header(
 
     const struct Elf32_Ehdr raw = rvd_read_ehdr(file, endian);
 
-    enum RvdError validation_err = rvd_validate_ehdr(&raw, file_size);
+    const enum RvdError validation_err = rvd_validate_ehdr(&raw, file_size);
     if (validation_err != RVD_OK) {
         return validation_err;
     }
