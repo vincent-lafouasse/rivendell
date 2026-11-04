@@ -68,7 +68,8 @@ int main(int ac, char** av)
     const char* const elf_path = av[1];
     const struct Buffer bytes = read_file_or_die(elf_path);
 
-    struct Header32 header; // dummy, just meant to trigger full validation of Ehdr
+    // dummy, just meant to trigger full validation of Ehdr
+    struct Header32 header;
     const enum RvdError err = rvd_parse_header(bytes.data, bytes.sz, &header);
     if (err != RVD_OK) {
         die("Validation error: %s", rvd_error_str(err));
