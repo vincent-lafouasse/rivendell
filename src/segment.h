@@ -1,6 +1,16 @@
 #pragma once
 
+#include <stddef.h>
+
+#include "header.h"
+#include "raw.h"
 #include "types.h"
+
+struct Elf32_Phdr rvd_read_phdr_at(
+    const u8* file,
+    const Header32 hdr[static 1],
+    size_t i
+);
 
 struct Segment32 {
     /* enum SegmentType type */
