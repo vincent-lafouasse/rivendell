@@ -2,24 +2,11 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "header.h"
 
 #define USAGE "Usage: rivendell_readelf [--file-header|--segments] binary.elf"
-
-struct Config {
-    const char* const path;
-    bool header;
-    bool segments;
-};
-
-static struct Config parse_config_or_die(int ac, const char* const* const av)
-{
-    (void)ac;
-    (void)av;
-
-    return (struct Config){0};
-}
 
 __attribute__((noreturn, format(printf, 1, 2))) static void die(
     const char* fmt,
@@ -35,6 +22,44 @@ __attribute__((noreturn, format(printf, 1, 2))) static void die(
     fputc('\n', stderr);
     va_end(ap);
     exit(EXIT_FAILURE);
+}
+
+struct Config {
+    const char* const path;
+    bool header;
+    bool segments;
+};
+
+static struct Config parse_config_or_die(int ac, const char* const* const av)
+{
+    if (ac == 2) {
+        return (struct Config){
+            .path = av[1],
+            .header = true,
+            .segments = true,
+        };
+    }
+
+    if (ac != 3) {
+        die(USAGE);
+    }
+
+    // ac == 3
+    const char* const flag = av[1];
+    const char* const path = av[2];
+
+    const bool header = strcmp(flag, "--file-header") == 0;
+    const bool segments = strcmp(flag, "--segments-header") == 0;
+
+    if (!header && !segments) {
+        die(USAGE);
+    }
+
+    return (struct Config){
+        .path = path,
+        .header = header,
+        .segments = segments,
+    };
 }
 
 static size_t file_size(FILE* f)
@@ -81,10 +106,8 @@ int main(int ac, const char* const* const av)
     }
 
     const struct Config cfg = parse_config_or_die(ac, av);
-    (void)cfg;
 
-    const char* const elf_path = av[1];
-    const struct Buffer bytes = read_file_or_die(elf_path);
+    const struct Buffer bytes = read_file_or_die(cfg.path);
 
     // dummy, just meant to trigger full validation of Ehdr
     struct Header32 header;
