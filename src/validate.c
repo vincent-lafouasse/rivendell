@@ -165,6 +165,9 @@ enum RvdError rvd_validate_ehdr(
     if (hdr->e_phnum == PN_XNUM) {
         return RVD_UNSUPPORTED_PHNUM;
     }
+    if (hdr->e_phentsize != PHDR_SIZE) {
+        return RVD_BAD_PHENTSIZE;
+    }
 
     // e_sh* are ignored
 
