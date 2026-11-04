@@ -74,7 +74,7 @@ static struct Buffer read_file_or_die(const char* const path)
     return (struct Buffer){.data = data, .sz = sz};
 }
 
-int main(int ac, char** av)
+int main(int ac, const char* const* const av)
 {
     if (ac != 2) {
         die(USAGE);
