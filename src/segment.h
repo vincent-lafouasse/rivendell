@@ -7,4 +7,6 @@ struct Segment32 {
     u32 offset;
     u32 v_addr;
     u32 p_addr;
+    u32 filesz;
+    u32 memsz;
 };
