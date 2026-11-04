@@ -124,6 +124,10 @@ enum RvdError rvd_validate_ehdr(
         return RVD_BAD_MACHINE;
     }
 
+    if (hdr->e_ehsize != EHDR_SIZE) {
+        return RVD_BAD_EHSIZE;
+    }
+
     // supported targets only, add a case and a flags validator to support more
     enum RvdError flags_err;
     switch (hdr->e_machine) {
