@@ -95,7 +95,10 @@ static enum RvdError validate_ident(const u8 ident[static EI_NIDENT])
     return RVD_OK;
 }
 
-enum RvdError rvd_validate_ehdr(const struct Elf32_Ehdr hdr[static 1])
+enum RvdError rvd_validate_ehdr(
+    const struct Elf32_Ehdr hdr[static 1],
+    size_t file_size
+)
 {
     const enum RvdError err = validate_ident(hdr->e_ident);
     if (err != RVD_OK) {

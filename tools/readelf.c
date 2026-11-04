@@ -69,7 +69,7 @@ int main(int ac, char** av)
 
     const struct Elf32_Ehdr raw_header = rvd_read_ehdr(bytes.data, endian);
 
-    const enum RvdError err = rvd_validate_ehdr(&raw_header);
+    const enum RvdError err = rvd_validate_ehdr(&raw_header, bytes.sz);
     if (err != RVD_OK) {
         die("Validation error: %s", rvd_error_str(err));
     }
