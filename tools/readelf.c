@@ -101,10 +101,6 @@ static struct Buffer read_file_or_die(const char* const path)
 
 int main(int ac, const char* const* const av)
 {
-    if (ac != 2) {
-        die(USAGE);
-    }
-
     const struct Config cfg = parse_config_or_die(ac, av);
 
     const struct Buffer bytes = read_file_or_die(cfg.path);
