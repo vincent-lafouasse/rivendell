@@ -161,6 +161,10 @@ enum RvdError rvd_validate_ehdr(
     if (hdr->e_phnum == 0) {
         return RVD_NO_SEGMENTS;
     }
+    // the real count would be in section header 0, which we don't read
+    if (hdr->e_phnum == PN_XNUM) {
+        return RVD_UNSUPPORTED_PHNUM;
+    }
 
     // e_sh* are ignored
 

@@ -70,6 +70,11 @@ enum RiscvFloatAbi {
 #define EF_RISCV_NONSTANDARD 0xff000000u
 
 // on-disk size of Elf32 headers
+// e_phnum escape value, the real count is in section header 0's sh_info
+enum ElfPhnum {
+    PN_XNUM = 0xffff,
+};
+
 enum Elf32Size {
     EHDR_SIZE = 52,
     PHDR_SIZE = 32,
