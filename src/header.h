@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stddef.h>
+
 #include "rivendell/error.h"
 #include "types.h"
 
