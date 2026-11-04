@@ -2,7 +2,8 @@
 
 #include <stddef.h>
 
-#include "rivendell/error.h"
+#include <rivendell/error.h>
+
 #include "types.h"
 
 struct Header32 {
