@@ -9,6 +9,10 @@ enum RvdError rvd_parse_header(
     struct Header32 out[static 1]
 )
 {
+    if (file_size < EHDR_SIZE) {
+        return RVD_TRUNCATED;
+    }
+
     const enum Endianness endian = rvd_parse_endianness(file[EI_DATA]);
 
     const struct Elf32_Ehdr raw = rvd_read_ehdr(file, endian);
