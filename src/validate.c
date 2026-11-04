@@ -168,6 +168,11 @@ enum RvdError rvd_validate_ehdr(
     if (hdr->e_phentsize != PHDR_SIZE) {
         return RVD_BAD_PHENTSIZE;
     }
+    // u64 so that a huge e_phoff can't wrap around
+    const u64 ph_end = (u64)hdr->e_phoff + (u64)hdr->e_phnum * PHDR_SIZE;
+    if (ph_end > file_size) {
+        return RVD_PHDRS_OUT_OF_FILE;
+    }
 
     // e_sh* are ignored
 
