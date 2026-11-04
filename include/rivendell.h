@@ -5,7 +5,7 @@
 
 #include "./rivendell/error.h"
 
-enum RvdError rvd_elf32_load(
+struct RvdError rvd_elf32_load(
     const uint8_t* file,
     size_t file_size,
     uint8_t* ram,

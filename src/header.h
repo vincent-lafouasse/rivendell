@@ -14,7 +14,7 @@ struct Header32 {
     /* enum Machine machine, later when i implement ARM */
 };
 
-enum RvdError rvd_parse_header(
+struct RvdError rvd_parse_header(
     const u8* file,
     size_t file_size,
     struct Header32 out[static 1]

@@ -246,9 +246,10 @@ int main(int ac, const char* const* const av)
 
     // validate first, the printers only have to handle supported files
     struct Header32 header;
-    const enum RvdError err = rvd_parse_header(bytes.data, bytes.sz, &header);
-    if (err != RVD_OK) {
-        die("Validation error: %s", rvd_error_str(err));
+    const struct RvdError err = rvd_parse_header(bytes.data, bytes.sz, &header);
+    if (err.kind != RVD_OK) {
+        char msg[RVD_ERROR_FORMAT_MAX];
+        die("Validation error: %s", rvd_error_format(err, msg));
     }
 
     if (cfg.header) {

@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "err.h"
+
 static const u8 k_magic[4] = {0x7f, 'E', 'L', 'F'};
 
 // what the emulator can run: soft-float RV32I, no compressed instructions.
@@ -32,49 +34,51 @@ static bool is_assigned_machine(u16 m)
     return true;
 }
 
-static enum RvdError validate_riscv_flags(u32 e_flags)
+static struct RvdError validate_riscv_flags(u32 e_flags)
 {
     if (e_flags & EF_RISCV_RESERVED) {
-        return RVD_BAD_FLAGS;
+        return rvd_err(RVD_BAD_FLAGS, e_flags);
     }
     if ((e_flags & EF_RISCV_FLOAT_ABI) != RISCV_SUPPORTED_FLOAT_ABI) {
-        return RVD_UNSUPPORTED_FLAGS;
+        return rvd_err(RVD_UNSUPPORTED_FLAGS, e_flags);
     }
     // everything else is a valid flag the emulator may not implement:
     // RVC, RV64ILP32, RVY and non-standard bits
     if (e_flags & ~(u32)(RISCV_SUPPORTED_FLAGS | EF_RISCV_FLOAT_ABI)) {
-        return RVD_UNSUPPORTED_FLAGS;
+        return rvd_err(RVD_UNSUPPORTED_FLAGS, e_flags);
     }
-    return RVD_OK;
+    return rvd_ok();
 }
 
-static enum RvdError validate_riscv(const struct Elf32_Ehdr hdr[static 1])
+static struct RvdError validate_riscv(const struct Elf32_Ehdr hdr[static 1])
 {
-    const enum RvdError err = validate_riscv_flags(hdr->e_flags);
-    if (err != RVD_OK) {
+    const struct RvdError err = validate_riscv_flags(hdr->e_flags);
+    if (rvd_is_err(err)) {
         return err;
     }
     // the first fetch would raise an instruction-address-misaligned exception.
     // whether the entry point is actually loaded is checked with the segments
     if (hdr->e_entry % RISCV_ENTRY_ALIGN != 0) {
-        return RVD_MISALIGNED_ENTRY;
+        return rvd_err(RVD_MISALIGNED_ENTRY, hdr->e_entry);
     }
-    return RVD_OK;
+    return rvd_ok();
 }
 
-static enum RvdError validate_ident(const u8 ident[static EI_NIDENT])
+static struct RvdError validate_ident(const u8 ident[static EI_NIDENT])
 {
     if (memcmp(ident, k_magic, sizeof k_magic) != 0) {
-        return RVD_BAD_MAGIC;
+        const u64 magic = (u64)ident[0] << 24 | (u64)ident[1] << 16 |
+                          (u64)ident[2] << 8 | (u64)ident[3];
+        return rvd_err(RVD_BAD_MAGIC, magic);
     }
 
     switch (ident[EI_CLASS]) {
         case EI_CLASS_32BIT:
             break;
         case EI_CLASS_64BIT:
-            return RVD_UNSUPPORTED_CLASS;
+            return rvd_err(RVD_UNSUPPORTED_CLASS, ident[EI_CLASS]);
         default:
-            return RVD_BAD_CLASS;
+            return rvd_err(RVD_BAD_CLASS, ident[EI_CLASS]);
     }
 
     switch (ident[EI_DATA]) {
@@ -82,42 +86,42 @@ static enum RvdError validate_ident(const u8 ident[static EI_NIDENT])
         case EI_DATA_BE:
             break;
         default:
-            return RVD_BAD_ENDIAN;
+            return rvd_err(RVD_BAD_ENDIAN, ident[EI_DATA]);
     }
 
     if (ident[EI_VERSION] != EI_VERSION_ONLY_VALUE) {
-        return RVD_BAD_IDENT_VERSION;
+        return rvd_err(RVD_BAD_IDENT_VERSION, ident[EI_VERSION]);
     }
 
     // 0x04 and 0x05 are unassigned, 0x40 and up are arch-specific and RISC-V
     // defines none
     const u8 ei_osabi = ident[EI_OSABI];
     if (ei_osabi == 0x04 || ei_osabi == 0x05 || ei_osabi > 0x12) {
-        return RVD_BAD_OSABI;
+        return rvd_err(RVD_BAD_OSABI, ei_osabi);
     }
     // the emulator runs bare-metal kernels, anything targeting an OS would
     // expect that OS's syscalls
     if (ei_osabi != ELFOSABI_NONE) {
-        return RVD_UNSUPPORTED_OSABI;
+        return rvd_err(RVD_UNSUPPORTED_OSABI, ei_osabi);
     }
 
     // its meaning depends on EI_OSABI, ELFOSABI_NONE only defines 0
     if (ident[EI_ABIVERSION] != EI_ABIVERSION_NONE) {
-        return RVD_UNSUPPORTED_ABI_VERSION;
+        return rvd_err(RVD_UNSUPPORTED_ABI_VERSION, ident[EI_ABIVERSION]);
     }
 
     // 0x09-0x0F we skip 7 bytes of padding, the spec says to ignore them
 
-    return RVD_OK;
+    return rvd_ok();
 }
 
-enum RvdError rvd_validate_ehdr(
+struct RvdError rvd_validate_ehdr(
     const struct Elf32_Ehdr hdr[static 1],
     size_t file_size
 )
 {
-    const enum RvdError err = validate_ident(hdr->e_ident);
-    if (err != RVD_OK) {
+    const struct RvdError err = validate_ident(hdr->e_ident);
+    if (rvd_is_err(err)) {
         return err;
     }
 
@@ -125,56 +129,56 @@ enum RvdError rvd_validate_ehdr(
     // is processor-specific
     const u16 e_type = hdr->e_type;
     if (e_type > 0x04 && e_type < 0xfe00) {
-        return RVD_BAD_TYPE;
+        return rvd_err(RVD_BAD_TYPE, e_type);
     }
     if (e_type != ET_EXEC) {
         // we want to load executables, this isn't one
-        return RVD_UNSUPPORTED_TYPE;
+        return rvd_err(RVD_UNSUPPORTED_TYPE, e_type);
     }
 
     if (hdr->e_version != EV_ONLY_VALUE) {
-        return RVD_BAD_VERSION;
+        return rvd_err(RVD_BAD_VERSION, hdr->e_version);
     }
 
     if (!is_assigned_machine(hdr->e_machine)) {
-        return RVD_BAD_MACHINE;
+        return rvd_err(RVD_BAD_MACHINE, hdr->e_machine);
     }
 
     if (hdr->e_ehsize != EHDR_SIZE) {
-        return RVD_BAD_EHSIZE;
+        return rvd_err(RVD_BAD_EHSIZE, hdr->e_ehsize);
     }
 
     // supported targets only, add a case and a validator to support more
-    enum RvdError machine_err;
+    struct RvdError machine_err;
     switch (hdr->e_machine) {
         case EM_RISCV:
             machine_err = validate_riscv(hdr);
             break;
         default:
-            return RVD_UNSUPPORTED_MACHINE;
+            return rvd_err(RVD_UNSUPPORTED_MACHINE, hdr->e_machine);
     }
-    if (machine_err != RVD_OK) {
+    if (rvd_is_err(machine_err)) {
         return machine_err;
     }
 
     // an executable without program headers has nothing to load
     if (hdr->e_phnum == 0) {
-        return RVD_NO_SEGMENTS;
+        return rvd_err(RVD_NO_SEGMENTS, 0);
     }
     // the real count would be in section header 0, which we don't read
     if (hdr->e_phnum == PN_XNUM) {
-        return RVD_UNSUPPORTED_PHNUM;
+        return rvd_err(RVD_UNSUPPORTED_PHNUM, hdr->e_phnum);
     }
     if (hdr->e_phentsize != PHDR_SIZE) {
-        return RVD_BAD_PHENTSIZE;
+        return rvd_err(RVD_BAD_PHENTSIZE, hdr->e_phentsize);
     }
     // u64 so that a huge e_phoff can't wrap around
     const u64 ph_end = (u64)hdr->e_phoff + (u64)hdr->e_phnum * PHDR_SIZE;
     if (ph_end > file_size) {
-        return RVD_PHDRS_OUT_OF_FILE;
+        return rvd_err(RVD_PHDRS_OUT_OF_FILE, ph_end);
     }
 
     // e_sh* are ignored
 
-    return RVD_OK;
+    return rvd_ok();
 }
