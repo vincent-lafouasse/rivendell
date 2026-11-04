@@ -1,10 +1,8 @@
-#include <assert.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "raw.h"
-#include "validate.h"
+#include "header.h"
 
 #define USAGE "Usage: rivendell_readelf binary.elf"
 
@@ -39,18 +37,23 @@ struct Buffer {
 
 static struct Buffer read_file_or_die(const char* const path)
 {
-    FILE* f = fopen(path, "r");
+    FILE* f = fopen(path, "rb");
     if (!f) {
         die("Failed to open %s", path);
     }
 
     const size_t sz = file_size(f);
+    if (sz == 0) {
+        die("Empty file");
+    }
     u8* data = malloc(sz);
     if (!data) {
         die("Out of memory");
     }
 
-    assert(fread(data, 1, sz, f) == sz);
+    if (fread(data, 1, sz, f) != sz) {
+        die("Failed to read %s", path);
+    }
     fclose(f);
 
     return (struct Buffer){.data = data, .sz = sz};
@@ -65,11 +68,8 @@ int main(int ac, char** av)
     const char* const elf_path = av[1];
     const struct Buffer bytes = read_file_or_die(elf_path);
 
-    const enum Endianness endian = rvd_parse_endianness(bytes.data[EI_DATA]);
-
-    const struct Elf32_Ehdr raw_header = rvd_read_ehdr(bytes.data, endian);
-
-    const enum RvdError err = rvd_validate_ehdr(&raw_header, bytes.sz);
+    struct Header32 header; // dummy, just meant to trigger full validation of Ehdr
+    const enum RvdError err = rvd_parse_header(bytes.data, bytes.sz, &header);
     if (err != RVD_OK) {
         die("Validation error: %s", rvd_error_str(err));
     }
