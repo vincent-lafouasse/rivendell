@@ -73,7 +73,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(bitcast)
 
 add_library(rivendell_core OBJECT)
-target_sources(rivendell_core PRIVATE src/read.c src/validate.c src/error_str.c)
+target_sources(rivendell_core PRIVATE src/header.c src/read.c src/validate.c
+                                      src/error_str.c)
 target_include_directories(rivendell_core PUBLIC include src)
 target_link_libraries(rivendell_core PRIVATE rivendell_flags)
 target_link_libraries(rivendell_core PRIVATE bitcast::bitcast)
