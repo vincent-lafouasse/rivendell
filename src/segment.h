@@ -18,3 +18,14 @@ struct Segment32 {
     u32 filesz;
     u32 memsz;
 };
+
+enum LoadSegmentStatus {
+    SEGMENT_LOAD,
+    SEGMENT_NOT_LOAD,
+};
+
+enum LoadSegmentStatus get_load_segment_at(
+    const u8* file,
+    const struct Header32 hdr[static 1],
+    size_t i
+);
