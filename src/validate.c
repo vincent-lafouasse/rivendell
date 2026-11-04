@@ -11,6 +11,8 @@ enum {
     RISCV_SUPPORTED_FLOAT_ABI = EF_RISCV_FLOAT_ABI_SOFT,
     // | EF_RISCV_RVC once C is implemented
     RISCV_SUPPORTED_FLAGS = EF_RISCV_RVE | EF_RISCV_TSO,
+    // 2 once C is implemented
+    RISCV_ENTRY_ALIGN = 4,
 };
 
 // e_machine values named by GNU readelf 2.47, the rest are unassigned.
@@ -42,6 +44,20 @@ static enum RvdError validate_riscv_flags(u32 e_flags)
     // RVC, RV64ILP32, RVY and non-standard bits
     if (e_flags & ~(u32)(RISCV_SUPPORTED_FLAGS | EF_RISCV_FLOAT_ABI)) {
         return RVD_UNSUPPORTED_FLAGS;
+    }
+    return RVD_OK;
+}
+
+static enum RvdError validate_riscv(const struct Elf32_Ehdr hdr[static 1])
+{
+    const enum RvdError err = validate_riscv_flags(hdr->e_flags);
+    if (err != RVD_OK) {
+        return err;
+    }
+    // the first fetch would raise an instruction-address-misaligned exception.
+    // whether the entry point is actually loaded is checked with the segments
+    if (hdr->e_entry % RISCV_ENTRY_ALIGN != 0) {
+        return RVD_MISALIGNED_ENTRY;
     }
     return RVD_OK;
 }
@@ -128,17 +144,17 @@ enum RvdError rvd_validate_ehdr(
         return RVD_BAD_EHSIZE;
     }
 
-    // supported targets only, add a case and a flags validator to support more
-    enum RvdError flags_err;
+    // supported targets only, add a case and a validator to support more
+    enum RvdError machine_err;
     switch (hdr->e_machine) {
         case EM_RISCV:
-            flags_err = validate_riscv_flags(hdr->e_flags);
+            machine_err = validate_riscv(hdr);
             break;
         default:
             return RVD_UNSUPPORTED_MACHINE;
     }
-    if (flags_err != RVD_OK) {
-        return flags_err;
+    if (machine_err != RVD_OK) {
+        return machine_err;
     }
 
     // e_entry, e_phoff, e_shoff are unchecked u32
