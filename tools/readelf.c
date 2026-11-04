@@ -49,7 +49,7 @@ static struct Config parse_config_or_die(int ac, const char* const* const av)
     const char* const path = av[2];
 
     const bool header = strcmp(flag, "--file-header") == 0;
-    const bool segments = strcmp(flag, "--segments-header") == 0;
+    const bool segments = strcmp(flag, "--segments") == 0;
 
     if (!header && !segments) {
         die(USAGE);
